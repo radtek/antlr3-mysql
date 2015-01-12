@@ -7,9 +7,10 @@ options
 	backtrack=true;
 }
 
+/*
 tokens 
 {
-}
+}*/
 
 @header 
 {
@@ -74,6 +75,7 @@ ALGORITHM_SYM			: A_ L_ G_ O_ R_ I_ T_ H_ M_  ;
 ALL				: A_ L_ L_  ;
 ALTER				: A_ L_ T_ E_ R_  ;
 ANALYZE_SYM			: A_ N_ A_ L_ Y_ Z_ E_  ;
+AND_KEY_SYM : A_ N_ D_ ;
 ANY				: A_ N_ Y_ ;
 ARMSCII8			: A_ R_ M_ S_ C_ I_ I_ '8'  ;
 AS_SYM				: A_ S_  ;
@@ -85,7 +87,8 @@ AT_SYM				: A_ T_  ;
 ATAN				: A_ T_ A_ N_  ;
 ATAN2				: A_ T_ A_ N_ '2'  ;
 AUTHORS_SYM			: A_ U_ T_ H_ O_ R_ S_  ;
-AUTO_INCREMENT			: A_ U_ T_ O_  '_' I_ N_ C_ R_ E_ M_ E_ N_ T_  ;
+AUTO_INCREMENT		: A_ U_ T_ O_  '_' I_ N_ C_ R_ E_ M_ E_ N_ T_  ;
+AUTOCOMMIT          : A_ U_ T_ O_ C_ O_ M_ M_ I_ T_ ;
 AUTOEXTEND_SIZE_SYM		: A_ U_ T_ O_ E_ X_ T_ E_ N_ D_  '_' S_ I_ Z_ E_  ;
 AVG				: A_ V_ G_;
 AVG_ROW_LENGTH			: A_ V_ G_  '_' R_ O_ W_  '_' L_ E_ N_ G_ T_ H_  ;
@@ -482,6 +485,7 @@ OLD_PASSWORD			: O_ L_ D_  '_' P_ A_ S_ S_ W_ O_ R_ D_  ;
 ON				: O_ N_  ;
 ONE_SHOT_SYM			: O_ N_ E_  '_' S_ H_ O_ T_  ;
 ONE_SYM				: O_ N_ E_  ;
+ONLY_SYM            : O_ N_ L_ Y_ ;
 OPEN_SYM			: O_ P_ E_ N_  ;
 OPTIMIZE			: O_ P_ T_ I_ M_ I_ Z_ E_  ;
 OPTION				: O_ P_ T_ I_ O_ N_  ;
@@ -762,9 +766,6 @@ YEAR_MONTH			: Y_ E_ A_ R_  '_' M_ O_ N_ T_ H_  ;
 YEARWEEK			: Y_ E_ A_ R_ W_ E_ E_ K_  ;
 ZEROFILL			: Z_ E_ R_ O_ F_ I_ L_ L_  ;
 
-
-
-
 // basic token definition ------------------------------------------------------------
 
 DIVIDE	: (  D_ I_ V_ ) | '/' ;
@@ -777,7 +778,7 @@ EQ_SYM	: '=' | '<=>' ;
 NOT_EQ	: '<>' | '!=' | '~='| '^=';
 LET	: '<=' ;
 GET	: '>=' ;
-SET_VAR	: ':=' ;
+SET_VAR	: ':=' | '=';
 SHIFT_LEFT	: '<<' ;
 SHIFT_RIGHT	: '>>' ;
 ALL_FIELDS	: '.*' ;
@@ -843,6 +844,14 @@ fragment USER_VAR_SUBFIX1:	(  '`' (~'`' )+ '`'  ) ;
 fragment USER_VAR_SUBFIX2:	( '\'' (~'\'')+ '\'' ) ;
 fragment USER_VAR_SUBFIX3:	( '\"' (~'\"')+ '\"' ) ;
 fragment USER_VAR_SUBFIX4:	( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
+
+
+SYS_VAR:
+    (SYS_VAR_SUBFIX | GLOBAL_SYM | SESSION_SYM)? SYS_VAR_NAME
+;
+
+fragment SYS_VAR_NAME: ( {input.LA(1) != GLOBAL_SYM || input.LA(1) != SESSION_SYM}? )*;
+fragment SYS_VAR_SUBFIX: ('@@global.' | '@@session.' | '@@');
 
 WHITE_SPACE	: ( ' '|'\r'|'\t'|'\n' ) {$channel=HIDDEN;} ;
 
@@ -1385,7 +1394,7 @@ partition_names:	partition_name (COMMA partition_name)* ;
 // SQL Statement Syntax ----  http://dev.mysql.com/doc/refman/5.6/en/sql-syntax.html ----------
 root_statement:
 	(SHIFT_LEFT SHIFT_RIGHT)?  
-	( data_manipulation_statements | data_definition_statements /*| transactional_locking_statements | replication_statements*/ )
+	( data_manipulation_statements | data_definition_statements | transactional_locking_statements /*| replication_statements*/ | database_admin_statements )
 	(SEMI)?
 ;
 
@@ -1441,10 +1450,12 @@ data_definition_statements:
 	| drop_index_statement
 ;
 
-/*transactional_locking_statements:
+transactional_locking_statements:
 	  start_transaction_statement
-	| comment_statement
+    | begin_statement
+	| commit_statement
 	| rollback_statement
+    | set_autocommit_statement
 
 	| savepoint_statement
 	| rollback_to_savepoint_statement
@@ -1455,9 +1466,10 @@ data_definition_statements:
 
 	| set_transaction_statement
 	
-	| xa_transaction_statement
+	// | xa_transaction_statement
 ;
 
+/*
 replication_statements:	
 	  controlling_master_servers_statements
 	| controlling_slave_servers_statements
@@ -1465,8 +1477,17 @@ replication_statements:
 */
 
 
+database_admin_statements:
+// table maintenance statement
+      analyze_table_statement
+    | check_table_statement
+    | checksum_table_statement
+    | optimize_table_statement
+    | repair_table_statement
 
-
+// set statement
+    | set_statements
+;
 
 
 
@@ -1538,6 +1559,10 @@ subquery:
 
 table_spec:
 	( schema_name DOT )? table_name
+;
+
+table_spec_list:
+    table_spec (COMMA table_spec)*
 ;
 
 displayed_column :
@@ -2313,4 +2338,121 @@ drop_view_statement:
 	(RESTRICT | CASCADE)?
 ;
 
+///////////////// transactional_locking_statements ///////////////////
+// http://dev.mysql.com/doc/refman/5.6/en/sql-syntax-transactions.html
 
+// START TRANSACTION, COMMIT, and ROLLBACK Syntax ---> http://dev.mysql.com/doc/refman/5.6/en/commit.html 
+start_transaction_statement:
+    START_SYM TRANSACTION transaction_characteristic_list
+;
+
+transaction_characteristic_list:
+    transaction_characteristic (COMMA transaction_characteristic)*
+;
+
+transaction_characteristic:
+      WITH CONSISTENT_SYM SNAPSHOT_SYM
+    | READ_SYM WRITE_SYM
+    | READ_SYM ONLY_SYM
+;
+
+begin_statement:
+    BEGIN_SYM (WORK_SYM)?
+;
+
+commit_statement:
+    COMMIT_SYM (WORK_SYM)? (AND_KEY_SYM (NO_SYM)? CHAIN_SYM)? ((NO_SYM)? RELEASE_SYM)?
+;
+
+rollback_statement:
+    ROLLBACK (WORK_SYM)? (AND_KEY_SYM (NO_SYM)? CHAIN_SYM)? ((NO_SYM)? RELEASE_SYM)?
+;
+
+set_autocommit_statement:
+    SET_SYM AUTOCOMMIT EQ_SYM ('0' | '1') 
+;
+
+// savepoint - http://dev.mysql.com/doc/refman/5.6/en/savepoint.html
+savepoint_statement:
+    SAVEPOINT ID 
+;
+
+rollback_to_savepoint_statement:
+    ROLLBACK (WORK_SYM)? TO_SYM ID
+;
+
+release_savepoint_statement:
+    RELEASE_SYM SAVEPOINT ID
+;
+
+// lock & unlock - http://dev.mysql.com/doc/refman/5.6/en/lock-tables.html
+lock_table_statement:
+    LOCK TABLES lock_type_list
+;
+
+lock_type_list:
+    table_spec (alias)? lock_type (COMMA table_spec (alias)? lock_type)*
+;
+
+lock_type:
+     READ_SYM (LOCAL_SYM)?
+   | (LOW_PRIORITY)? WRITE_SYM
+;
+
+unlock_table_statement:
+    UNLOCK_SYM TABLES
+;
+
+// set transaction - http://dev.mysql.com/doc/refman/5.6/en/set-transaction.html
+set_transaction_statement:
+    SET_SYM (GLOBAL_SYM | SESSION_SYM)? TRANSACTION set_transaction_characteristic_list
+;
+
+set_transaction_characteristic_list:
+    set_transaction_characteristic (COMMA set_transaction_characteristic)*
+;
+
+set_transaction_characteristic:
+    ISOLATION LEVEL_SYM (
+        REPEATABLE_SYM READ_SYM | READ_SYM COMMITTED_SYM | READ_SYM UNCOMMITTED_SYM
+            | SERIALIZABLE_SYM)
+    | READ_SYM WRITE_SYM
+    | READ_SYM ONLY_SYM
+;
+
+
+////////////////////// database admin statements ///////////////////////////
+// table maintenance statements - http://dev.mysql.com/doc/refman/5.6/en/table-maintenance-sql.html
+analyze_table_statement:
+    ANALYZE_SYM (NO_WRITE_TO_BINLOG | LOCAL_SYM)? TABLE table_spec_list
+;
+
+check_table_statement:
+    CHECK_SYM TABLE table_spec_list (FOR_SYM UPGRADE_SYM | QUICK | FAST_SYM | MEDIUM_SYM | EXTENDED_SYM | CHANGED)?
+;
+
+checksum_table_statement:
+    CHECKSUM_SYM TABLE table_spec_list (QUICK | EXTENDED_SYM)?
+;
+
+optimize_table_statement:
+    OPTIMIZE (NO_WRITE_TO_BINLOG | LOCAL_SYM)? TABLE table_spec_list
+;
+
+repair_table_statement:
+    REPAIR (NO_WRITE_TO_BINLOG | LOCAL_SYM)? TABLE table_spec_list (QUICK)? (EXTENDED_SYM)? (USE_FRM)?
+;
+
+// set_statement - http://dev.mysql.com/doc/refman/5.6/en/set-statement.html
+set_statements:
+      set_uservar_statement
+    | set_sysvar_statement
+;
+
+set_uservar_statement:
+    SET_SYM USER_VAR SET_VAR expression (COMMA USER_VAR SET_VAR expression)*    
+;
+
+set_sysvar_statement:
+    SET_SYM SYS_VAR SET_VAR expression (COMMA USER_VAR SET_VAR expression)*
+;
