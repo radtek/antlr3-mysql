@@ -461,8 +461,8 @@ MULTIPOINT			: M_ U_ L_ T_ I_ P_ O_ I_ N_ T_  ;
 MULTIPOLYGON			: M_ U_ L_ T_ I_ P_ O_ L_ Y_ G_ O_ N_  ;
 MUTEX_SYM			: M_ U_ T_ E_ X_  ;
 NAME_CONST			: N_ A_ M_ E_ '_' C_ O_ N_ S_ T_  ;
-NAME_SYM			: 'NAME'  ;
-NAMES_SYM			: 'NAMES'  ;
+NAME_SYM			: N_ A_ M_ E_  ;
+NAMES_SYM			: N_ A_ M_ E_ S_  ;
 NATIONAL_SYM			: N_ A_ T_ I_ O_ N_ A_ L_  ;
 NATURAL				: N_ A_ T_ U_ R_ A_ L_  ;
 NCHAR_SYM			: N_ C_ H_ A_ R_  ;
@@ -778,7 +778,7 @@ EQ_SYM	: '=' | '<=>' ;
 NOT_EQ	: '<>' | '!=' | '~='| '^=';
 LET	: '<=' ;
 GET	: '>=' ;
-SET_VAR	: ':=' | '=';
+SET_VAR	: ':=' ;
 SHIFT_LEFT	: '<<' ;
 SHIFT_RIGHT	: '>>' ;
 ALL_FIELDS	: '.*' ;
@@ -801,21 +801,23 @@ POWER_OP: '^' ;
 GTH	: '>' ;
 LTH	: '<' ;
 
+SINGLE_QUOTE : '\'' ;
+DOUBLE_QUOTE : '\"' ;
+BACKSLASH : '\\' ;
 
-
-INTEGER_NUM		: ('0'..'9')+ ;
+INTEGER_NUM: ('0'..'9')+ ;
 
 fragment HEX_DIGIT_FRAGMENT: ( 'a'..'f' | 'A'..'F' | '0'..'9' ) ;
 HEX_DIGIT:
 	(  '0x'     (HEX_DIGIT_FRAGMENT)+  )
 	|
-	(  'X' '\'' (HEX_DIGIT_FRAGMENT)+ '\''  ) 
+	(  'X' SINGLE_QUOTE (HEX_DIGIT_FRAGMENT)+ SINGLE_QUOTE  ) 
 ;
 
 BIT_NUM:
 	(  '0b'    ('0'|'1')+  )
 	|
-	(  B_ '\'' ('0'|'1')+ '\''  ) 
+	(  B_ SINGLE_QUOTE ('0'|'1')+ SINGLE_QUOTE  ) 
 ;
 
 REAL_NUMBER:
@@ -826,9 +828,9 @@ REAL_NUMBER:
 TEXT_STRING:
 	( N_ | ('_' U_ T_ F_ '8') )?
 	(
-		(  '\'' ( ('\\' '\\') | ('\'' '\'') | ('\\' '\'') | ~('\'') )* '\''  )
+		(  SINGLE_QUOTE ( (BACKSLASH BACKSLASH) | (SINGLE_QUOTE SINGLE_QUOTE) | (BACKSLASH SINGLE_QUOTE) | ~(SINGLE_QUOTE) )* SINGLE_QUOTE  )
 		|
-		(  '\"' ( ('\\' '\\') | ('\"' '\"') | ('\\' '\"') | ~('\"') )* '\"'  ) 
+		(  DOUBLE_QUOTE ( (BACKSLASH BACKSLASH) | (DOUBLE_QUOTE DOUBLE_QUOTE) | (BACKSLASH DOUBLE_QUOTE) | ~(DOUBLE_QUOTE) )* DOUBLE_QUOTE  ) 
 	)
 ;
 
@@ -841,26 +843,15 @@ USER_VAR:
 	'@' (USER_VAR_SUBFIX1 | USER_VAR_SUBFIX2 | USER_VAR_SUBFIX3 | USER_VAR_SUBFIX4)
 ;
 fragment USER_VAR_SUBFIX1:	(  '`' (~'`' )+ '`'  ) ;
-fragment USER_VAR_SUBFIX2:	( '\'' (~'\'')+ '\'' ) ;
-fragment USER_VAR_SUBFIX3:	( '\"' (~'\"')+ '\"' ) ;
+fragment USER_VAR_SUBFIX2:	( SINGLE_QUOTE (~SINGLE_QUOTE)+ SINGLE_QUOTE ) ;
+fragment USER_VAR_SUBFIX3:	( DOUBLE_QUOTE (~DOUBLE_QUOTE)+ DOUBLE_QUOTE ) ;
 fragment USER_VAR_SUBFIX4:	( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
-
-
-SYS_VAR:
-    (SYS_VAR_SUBFIX | GLOBAL_SYM | SESSION_SYM)? SYS_VAR_NAME
-;
-
-fragment SYS_VAR_NAME: ( {input.LA(1) != GLOBAL_SYM || input.LA(1) != SESSION_SYM}? )*;
-fragment SYS_VAR_SUBFIX: ('@@global.' | '@@session.' | '@@');
 
 WHITE_SPACE	: ( ' '|'\r'|'\t'|'\n' ) {$channel=HIDDEN;} ;
 
 // http://dev.mysql.com/doc/refman/5.6/en/comments.html
 SL_COMMENT	: ( ('--'|'#') ~('\n'|'\r')* '\r'? '\n' ) {$channel=HIDDEN;} ;
 ML_COMMENT	: '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;} ;
-
-
-
 
 
 // data type definition -----  http://dev.mysql.com/doc/refman/5.6/en/data-types.html  ---------------
@@ -967,7 +958,8 @@ charset_name:
 	| TIS620
 	| UCS2
 	| UJIS
-	| UTF8;
+	| UTF8
+;
 
 cast_data_type:	
 	BINARY (INTEGER_NUM)? 
@@ -1017,6 +1009,7 @@ interval_unit:
 collation_names:
 	LATIN1_GENERAL_CS | LATIN1_BIN
 ;
+
 
 
 
@@ -1262,6 +1255,7 @@ predicate:
 	| ( bit_expr (NOT_SYM)? REGEXP bit_expr ) 
 	| ( bit_expr )  
 ;
+
 bit_expr:
 	factor1 ( VERTBAR factor1 )? ;
 factor1:
@@ -1277,8 +1271,10 @@ factor5:
 factor6:
 	(PLUS | MINUS | NEGATION | BINARY) simple_expr
 	| simple_expr ;
+
 factor7:
 	simple_expr (COLLATE_SYM collation_names)?;
+
 simple_expr:
 	literal_value 
 	| column_spec
@@ -2368,10 +2364,6 @@ rollback_statement:
     ROLLBACK (WORK_SYM)? (AND_KEY_SYM (NO_SYM)? CHAIN_SYM)? ((NO_SYM)? RELEASE_SYM)?
 ;
 
-set_autocommit_statement:
-    SET_SYM AUTOCOMMIT EQ_SYM ('0' | '1') 
-;
-
 // savepoint - http://dev.mysql.com/doc/refman/5.6/en/savepoint.html
 savepoint_statement:
     SAVEPOINT ID 
@@ -2379,6 +2371,10 @@ savepoint_statement:
 
 rollback_to_savepoint_statement:
     ROLLBACK (WORK_SYM)? TO_SYM ID
+;
+
+set_autocommit_statement:
+    SET_SYM AUTOCOMMIT (EQ_SYM | SET_VAR) INTEGER_NUM
 ;
 
 release_savepoint_statement:
@@ -2445,14 +2441,43 @@ repair_table_statement:
 
 // set_statement - http://dev.mysql.com/doc/refman/5.6/en/set-statement.html
 set_statements:
-      set_uservar_statement
+      set_charset_statement
+    | set_names_statement
+    | set_uservar_statement
     | set_sysvar_statement
 ;
 
 set_uservar_statement:
-    SET_SYM USER_VAR SET_VAR expression (COMMA USER_VAR SET_VAR expression)*    
+    SET_SYM USER_VAR (SET_VAR | EQ_SYM) expression (COMMA USER_VAR (SET_VAR | EQ_SYM) expression)*
 ;
 
 set_sysvar_statement:
-    SET_SYM SYS_VAR SET_VAR expression (COMMA USER_VAR SET_VAR expression)*
+    SET_SYM SYS_VAR (SET_VAR | EQ_SYM) expression (COMMA SYS_VAR (SET_VAR | EQ_SYM) expression)*
 ;
+
+SYS_VAR:
+    (SYS_VAR_SUBFIX | GLOBAL_SYM | SESSION_SYM) subfix=USER_VAR_SUBFIX4 {printf("\%s \n", (char*) ($subfix.text->chars));}
+;
+
+fragment SYS_VAR_SUBFIX: ('@@global.' | '@@session.' | '@@');
+
+set_charset_statement:
+    SET_SYM CHARACTER_SYM SET_SYM (DEFAULT | charset_name_str)
+;
+
+set_names_statement:
+    SET_SYM NAMES_SYM (DEFAULT | charset_name_str (COLLATE_SYM collation_names_str)? )
+;
+
+charset_name_str:
+      charset_name
+    | SINGLE_QUOTE charset_name SINGLE_QUOTE
+    | DOUBLE_QUOTE charset_name DOUBLE_QUOTE
+;
+
+collation_names_str:
+      collation_names
+    | SINGLE_QUOTE collation_names SINGLE_QUOTE
+    | DOUBLE_QUOTE collation_names DOUBLE_QUOTE
+;
+
