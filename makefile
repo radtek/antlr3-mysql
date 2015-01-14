@@ -8,8 +8,5 @@ MySQLLexer.o:
 MySQLParser.o:
 	gcc -c -o MySQLParser.o MySQLParser.c -I./include -L./lib -lantlr3c
 
-test: all
-	./main sql.txt
-
 clean:
 	rm -rf *.o *.a
