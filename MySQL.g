@@ -985,18 +985,8 @@ replication_statements:
 
 
 database_admin_statements:
-// table maintenance statement
-      analyze_table_statement
-    | check_table_statement
-    | checksum_table_statement
-    | optimize_table_statement
-    | repair_table_statement
-
 // set statement
-    | set_statements
-;
-
-set_statements:
+    
       { input.LA(1) == SET_SYM &&
         (((input.LA(2) == GLOBAL_SYM || input.LA(2) == SESSION_SYM) && input.LA(3) == TRANSACTION) ||
             input.LA(2) == TRANSACTION)
@@ -1004,6 +994,13 @@ set_statements:
     | set_charset_statement
     | set_names_statement
     | set_uservar_statement
-    | set_global_statement
+    | {input.LA(1) == SET_SYM && input.LA(2) == GLOBAL_SYM}? set_global_statement
+    
+    // table maintenance statement
+    | analyze_table_statement
+    | check_table_statement
+    | checksum_table_statement
+    | optimize_table_statement
+    | repair_table_statement
 ;
 
