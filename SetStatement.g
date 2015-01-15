@@ -15,16 +15,12 @@ set_transaction_characteristic:
 ;
 
 
-set_uservar_statement:
+set_usrvar_statement:
     SET_SYM USER_VAR (SET_VAR | EQ_SYM) expression (COMMA USER_VAR (SET_VAR | EQ_SYM) expression)*
 ;
 
 set_charset_statement:
     SET_SYM CHARACTER_SYM SET_SYM (DEFAULT | charset_name_str)
-;
-
-set_global_statement:
-    SET_SYM GLOBAL_SYM USER_VAR_SUFIX4 (SET_VAR | EQ_SYM) expression (COMMA USER_VAR_SUFIX4 (SET_VAR | EQ_SYM) expression)*
 ;
 
 set_sysvar_statement:

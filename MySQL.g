@@ -834,11 +834,12 @@ WHITE_SPACE    : ( ' '|'\r'|'\t'|'\n' ) {$channel=HIDDEN;} ;
 SL_COMMENT    : ( ('--'|'#') ~('\n'|'\r')* '\r'? '\n' ) {$channel=HIDDEN;} ;
 ML_COMMENT    : '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;} ;
 
-fragment SYS_VAR:
-    (SYS_VAR_SUBFIX | GLOBAL_SYM | SESSION_SYM) subfix=USER_VAR_SUBFIX4 {System.out.println($subfix.text);}
+SYS_VAR:
+    (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM) subfix=SYS_VAR_ID {System.out.println($subfix.text);}
 ;
 
-fragment SYS_VAR_SUBFIX: ('@@global.' | '@@session.' | '@@');
+fragment SYS_VAR_PREFIX: ('@@global.' | '@@session.' | '@@');
+fragment SYS_VAR_ID:    ( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
 
 // data type definition -----  http://dev.mysql.com/doc/refman/5.6/en/data-types.html  ---------------
 /*integer_types:
@@ -993,8 +994,8 @@ database_admin_statements:
       }? set_transaction_statement
     | set_charset_statement
     | set_names_statement
-    | set_uservar_statement
-    | {input.LA(1) == SET_SYM && input.LA(2) == GLOBAL_SYM}? set_global_statement
+    | set_usrvar_statement
+    | set_sysvar_statement
     
     // table maintenance statement
     | analyze_table_statement
