@@ -8,7 +8,8 @@ options
     backtrack=true;
 }
 
-import Literal, Expression, Function, Identifier, Charset, TransactionStatement, SetStatement, AdminStatement, DMLStatement, DDLStatement;
+
+import Literal, Expression, Function, Identifier, Charset, DMLStatement;
 
 fragment A_ :    'a' | 'A';
 fragment B_ :    'b' | 'B';
@@ -828,19 +829,15 @@ fragment USER_VAR_SUBFIX2:    ( SINGLE_QUOTE (~SINGLE_QUOTE)+ SINGLE_QUOTE ) ;
 fragment USER_VAR_SUBFIX3:    ( DOUBLE_QUOTE (~DOUBLE_QUOTE)+ DOUBLE_QUOTE ) ;
 fragment USER_VAR_SUBFIX4:    ( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
 
+SYS_VAR_PREFIX: ('@@' (GLOBAL_SYM | SESSION_SYM)? DOT );
+fragment SYS_VAR_ID:    ID ;
+
+
 WHITE_SPACE    : ( ' '|'\r'|'\t'|'\n' ) {$channel=HIDDEN;} ;
 
 // http://dev.mysql.com/doc/refman/5.6/en/comments.html
 SL_COMMENT    : ( ('--'|'#') ~('\n'|'\r')* '\r'? '\n' ) {$channel=HIDDEN;} ;
 ML_COMMENT    : '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;} ;
-
-SYS_VAR:
-    (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM) subfix=SYS_VAR_ID {System.out.println($subfix.text);}
-;
-
-fragment SYS_VAR_PREFIX: ('@@global.' | '@@session.' | '@@');
-fragment SYS_VAR_ID:    ( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
-
 // data type definition -----  http://dev.mysql.com/doc/refman/5.6/en/data-types.html  ---------------
 /*integer_types:
     INTEGER_SYM | TINYINT | SMALLINT | MEDIUMINT | INT_SYM | BIGINT
@@ -905,76 +902,8 @@ datetypes_decl:
 // SQL Statement Syntax ----  http://dev.mysql.com/doc/refman/5.6/en/sql-syntax.html ----------
 root_statement:
     (SHIFT_LEFT SHIFT_RIGHT)?  
-    ( data_manipulation_statements | data_definition_statements | transactional_locking_statements /*| replication_statements*/ | database_admin_statements )
+    ( database_admin_statements )
     (SEMI)?
-;
-
-data_manipulation_statements:
-      select_statement
-    | delete_statements
-    | insert_statements
-    | update_statements
-
-    | call_statement
-    | do_statement
-    | handler_statements
-    | load_data_statement
-    | load_xml_statement
-    | replace_statement
-;
-
-data_definition_statements: 
-      create_database_statement
-    | alter_database_statements
-    | drop_database_statement
-    
-    | create_event_statement
-    | alter_event_statement
-    | drop_event_statement
-    
-    //| create_function_statement
-    //| alter_function_statement
-    //| drop_function_statement
-    
-    //| create_procedure_create_function_statement
-    //| alter_procedure_statement
-    //| drop_procedure_drop_function_statement
-    
-    //| create_trigger_statement
-    //| drop_trigger_statement
-    
-    | create_server_statement
-    | alter_server_statement
-    | drop_server_statement
-    
-    | create_table_statement
-    | alter_table_statement
-    | drop_table_statement
-    
-    | create_view_statement
-    | alter_view_statement
-    | rename_table_statement
-    | drop_view_statement
-    | truncate_table_statement
-    
-    | create_index_statement
-    | drop_index_statement
-;
-
-transactional_locking_statements:
-      start_transaction_statement
-    | begin_statement
-    | commit_statement
-    | rollback_statement
-
-    | savepoint_statement
-    | rollback_to_savepoint_statement
-    | release_savepoint_statement
-
-    | lock_table_statement
-    | unlock_table_statement
-
-    // | xa_transaction_statement
 ;
 
 /*
@@ -988,20 +917,59 @@ replication_statements:
 database_admin_statements:
 // set statement
     
-      { input.LA(1) == SET_SYM &&
+    /*{ input.LA(1) == SET_SYM &&
         (((input.LA(2) == GLOBAL_SYM || input.LA(2) == SESSION_SYM) && input.LA(3) == TRANSACTION) ||
             input.LA(2) == TRANSACTION)
-      }? set_transaction_statement
+    }?*/ set_transaction_statement
     | set_charset_statement
     | set_names_statement
     | set_usrvar_statement
     | set_sysvar_statement
-    
-    // table maintenance statement
-    | analyze_table_statement
-    | check_table_statement
-    | checksum_table_statement
-    | optimize_table_statement
-    | repair_table_statement
 ;
 
+
+set_usrvar_statement:
+    SET_SYM USER_VAR (SET_VAR | EQ_SYM) expression (COMMA USER_VAR (SET_VAR | EQ_SYM) expression)*
+;
+
+set_charset_statement:
+    SET_SYM CHARACTER_SYM SET_SYM (DEFAULT | charset_name_str)
+;
+
+set_sysvar_statement:
+    SET_SYM sys_var_id (SET_VAR | EQ_SYM) expression (COMMA sys_var_id (SET_VAR | EQ_SYM) expression)*
+;
+
+sys_var_id:
+    (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM) ID
+;
+
+set_names_statement:
+    SET_SYM NAMES_SYM (DEFAULT | charset_name_str (COLLATE_SYM collation_names_str)? )
+;
+
+charset_name_str
+	:	
+	charset_name
+	| string_literal
+;
+
+collation_names_str:
+      collation_names
+    | string_literal
+;
+
+// set transaction - http://dev.mysql.com/doc/refman/5.6/en/set-transaction.html
+set_transaction_statement:
+    SET_SYM (GLOBAL_SYM | SESSION_SYM)? TRANSACTION set_transaction_characteristic (COMMA set_transaction_characteristic)*
+;
+
+
+set_transaction_characteristic:
+    ISOLATION LEVEL_SYM (
+        REPEATABLE_SYM READ_SYM | READ_SYM COMMITTED_SYM | READ_SYM UNCOMMITTED_SYM
+            | SERIALIZABLE_SYM)
+    | READ_SYM WRITE_SYM
+    | READ_SYM ONLY_SYM
+;
+	
