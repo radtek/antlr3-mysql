@@ -966,6 +966,8 @@ transactional_locking_statements:
     | begin_statement
     | commit_statement
     | rollback_statement
+    | set_transaction_statement
+    | set_autocommit_statement
 
     | savepoint_statement
     | rollback_to_savepoint_statement
@@ -986,13 +988,8 @@ replication_statements:
 
 
 database_admin_statements:
-// set statement
-    
-      { input.LA(1) == SET_SYM &&
-        (((input.LA(2) == GLOBAL_SYM || input.LA(2) == SESSION_SYM) && input.LA(3) == TRANSACTION) ||
-            input.LA(2) == TRANSACTION)
-      }? set_transaction_statement
-    | set_charset_statement
+    // set statements
+      set_charset_statement
     | set_names_statement
     | set_usrvar_statement
     | set_sysvar_statement
