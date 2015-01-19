@@ -901,7 +901,11 @@ datetypes_decl:
 // SQL Statement Syntax ----  http://dev.mysql.com/doc/refman/5.6/en/sql-syntax.html ----------
 root_statement:
     (SHIFT_LEFT SHIFT_RIGHT)?  
-    ( database_admin_statements )
+    ( data_manipulation_statements 
+	| data_definition_statements 
+	| transactional_locking_statements 
+	/*| replication_statements*/ 
+	| database_admin_statements )
     (SEMI)?
 ;
 

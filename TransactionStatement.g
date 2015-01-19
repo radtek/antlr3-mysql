@@ -47,7 +47,7 @@ rollback_to_savepoint_statement:
 ;
 
 set_autocommit_statement:
-    SET_SYM AUTOCOMMIT (EQ_SYM | SET_VAR) INTEGER_NUM
+    SET_SYM (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM)? AUTOCOMMIT (EQ_SYM | SET_VAR) expression
 ;
 
 release_savepoint_statement:
