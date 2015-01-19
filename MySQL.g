@@ -42,7 +42,7 @@ ABS                : A_ B_ S_ ;
 ACCESSIBLE            : A_ C_ C_ E_ S_ S_ I_ B_ L_ E_  ;
 ACOS                : A_ C_ O_ S_ ;
 ACTION                : A_ C_ T_ I_ O_ N_  ;
-ADD_SYM                : A_ D_ D_  ;
+ADD                : A_ D_ D_  ;
 ADDDATE                : A_ D_ D_ D_ A_ T_ E_  ;
 ADDTIME                : A_ D_ D_ T_ I_ M_ E_  ;
 AES_DECRYPT            : A_ E_ S_ '_' D_ E_ C_ R_ Y_ P_ T_  ;
@@ -54,7 +54,7 @@ ALGORITHM            : A_ L_ G_ O_ R_ I_ T_ H_ M_  ;
 ALL                : A_ L_ L_  ;
 ALTER                : A_ L_ T_ E_ R_  ;
 ANALYZE            : A_ N_ A_ L_ Y_ Z_ E_  ;
-AND_KEY : A_ N_ D_ ;
+AND_SYM : A_ N_ D_ ;
 ANY                : A_ N_ Y_ ;
 ARMSCII8            : A_ R_ M_ S_ C_ I_ I_ '8'  ;
 AS                : A_ S_  ;
@@ -196,7 +196,7 @@ DEFINER                : D_ E_ F_ I_ N_ E_ R_ ;
 DEGREES                : D_ E_ G_ R_ E_ E_ S_  ;
 DELAY_KEY_WRITE        : D_ E_ L_ A_ Y_  '_' K_ E_ Y_  '_' W_ R_ I_ T_ E_  ;
 DELAYED            : D_ E_ L_ A_ Y_ E_ D_  ;
-DELETE_SYM            : D_ E_ L_ E_ T_ E_ ;
+DELETE            : D_ E_ L_ E_ T_ E_ ;
 DES_DECRYPT            : D_ E_ S_ '_' D_ E_ C_ R_ Y_ P_ T_  ;
 DES_ENCRYPT            : D_ E_ S_ '_' E_ N_ C_ R_ Y_ P_ T_  ;
 DES_KEY_FILE            : D_ E_ S_  '_' K_ E_ Y_  '_' F_ I_ L_ E_  ;
@@ -409,7 +409,7 @@ MASTER_SSL_VERIFY_SERVER_CERT    : M_ A_ S_ T_ E_ R_  '_' S_ S_ L_  '_' V_ E_ R_
 MASTER            : M_ A_ S_ T_ E_ R_  ;
 MASTER_USER            : M_ A_ S_ T_ E_ R_  '_' U_ S_ E_ R_  ;
 MATCH                : M_ A_ T_ C_ H_  ;
-MAX_SYM                : M_ A_ X_  ;
+MAX                : M_ A_ X_  ;
 MAX_CONNECTIONS_PER_HOUR    : M_ A_ X_  '_' C_ O_ N_ N_ E_ C_ T_ I_ O_ N_ S_  '_' P_ E_ R_  '_' H_ O_ U_ R_  ;
 MAX_QUERIES_PER_HOUR        : M_ A_ X_  '_' Q_ U_ E_ R_ I_ E_ S_  '_' P_ E_ R_  '_' H_ O_ U_ R_  ;
 MAX_ROWS            : M_ A_ X_  '_' R_ O_ W_ S_  ;
@@ -427,7 +427,7 @@ MERGE            : M_ E_ R_ G_ E_  ;
 MICROSECOND            : M_ I_ C_ R_ O_ S_ E_ C_ O_ N_ D_  ;
 MID                : M_ I_ D_  ;
 MIGRATE            : M_ I_ G_ R_ A_ T_ E_  ;
-MIN_SYM                : M_ I_ N_  ;
+MIN                : M_ I_ N_  ;
 MIN_ROWS            : M_ I_ N_  '_' R_ O_ W_ S_  ;
 MINUTE                : M_ I_ N_ U_ T_ E_  ;
 MINUTE_MICROSECOND        : M_ I_ N_ U_ T_ E_  '_' M_ I_ C_ R_ O_ S_ E_ C_ O_ N_ D_  ;
@@ -457,7 +457,7 @@ NODEGROUP            : N_ O_ D_ E_ G_ R_ O_ U_ P_  ;
 NONE            : N_ O_ N_ E_  ;
 NOT                : (N_ O_ T_) | ('!') ;
 NOW                : (N_ O_ W_) | (L_ O_ C_ A_ L_ T_ I_ M_ E_) | (L_ O_ C_ A_ L_ T_ I_ M_ E_ S_ T_ A_ M_ P_) | (C_ U_ R_ R_ E_ N_ T_ '_' T_ I_ M_ E_ S_ T_ A_ M_ P_);
-NULL_SYM            : N_ U_ L_ L_  ;
+NULL            : N_ U_ L_ L_  ;
 NUMERIC            : N_ U_ M_ E_ R_ I_ C_  ;
 NVARCHAR            : N_ V_ A_ R_ C_ H_ A_ R_  ;
 OCT                : O_ C_ T_  ;
@@ -473,6 +473,7 @@ OPTIMIZE            : O_ P_ T_ I_ M_ I_ Z_ E_  ;
 OPTION                : O_ P_ T_ I_ O_ N_  ;
 OPTIONALLY            : O_ P_ T_ I_ O_ N_ A_ L_ L_ Y_  ;
 OPTIONS            : O_ P_ T_ I_ O_ N_ S_  ;
+OR_SYM  :   O_ R_ ;
 ORD                : O_ R_ D_  ;
 ORDER            : O_ R_ D_ E_ R_  ;
 OUT                : O_ U_ T_  ;
@@ -512,7 +513,7 @@ PROFILE            : P_ R_ O_ F_ I_ L_ E_  ;
 PROFILES        : P_ R_ O_ F_ I_ L_ E_ S_  ;
 PURGE                : P_ U_ R_ G_ E_  ;
 QUARTER                : Q_ U_ A_ R_ T_ E_ R_  ;
-QUERY_SYM            : Q_ U_ E_ R_ Y_  ;
+QUERY            : Q_ U_ E_ R_ Y_  ;
 QUICK                : Q_ U_ I_ C_ K_  ;
 QUOTE                : Q_ U_ O_ T_ E_  ;
 RADIANS                : R_ A_ D_ I_ A_ N_ S_  ;
@@ -621,7 +622,7 @@ STARTING            : S_ T_ A_ R_ T_ I_ N_ G_  ;
 STATS_AUTO_RECALC        : S_ T_ A_ T_ S_ '_' A_ U_ T_ O_ '_' R_ E_ C_ A_ L_ C_  ;
 STATS_PERSISTENT        : S_ T_ A_ T_ S_ '_' P_ E_ R_ S_ I_ S_ T_ E_ N_ T_  ;
 STARTS            : S_ T_ A_ R_ T_ S_  ;
-STATUS_SYM            : S_ T_ A_ T_ U_ S_  ;
+STATUS            : S_ T_ A_ T_ U_ S_  ;
 STD                : S_ T_ D_  ;
 STDDEV                : S_ T_ D_ D_ E_ V_  ;
 STDDEV_POP            : S_ T_ D_ D_ E_ V_ '_' P_ O_ P_  ;
@@ -726,7 +727,7 @@ VARCHAR                : V_ A_ R_ C_ H_ A_ R_  ;
 VARIABLES            : V_ A_ R_ I_ A_ B_ L_ E_ S_  ;
 VARIANCE            : V_ A_ R_ I_ A_ N_ C_ E_  ;
 VARYING                : V_ A_ R_ Y_ I_ N_ G_ ;
-VERSION_SYM            : V_ E_ R_ S_ I_ O_ N_  ;
+VERSION            : V_ E_ R_ S_ I_ O_ N_  ;
 VIEW            : V_ I_ E_ W_  ;
 WAIT            : W_ A_ I_ T_  ;
 WARNINGS            : W_ A_ R_ N_ I_ N_ G_ S_  ;
@@ -1054,27 +1055,27 @@ table_reference:
     table_factor1 | table_atom
 ;
 table_factor1:
-    table_factor2 (  (INNER_SYM | CROSS)? JOIN_SYM table_atom (join_condition)?  )?  
+    table_factor2 (  (INNER | CROSS)? JOIN table_atom (join_condition)?  )?  
 ;
 table_factor2:
     table_factor3 (  STRAIGHT_JOIN table_atom (ON expression)?  )?  
 ;
 table_factor3:
-    table_factor4 (  (LEFT|RIGHT) (OUTER)? JOIN_SYM table_factor4 join_condition  )?  
+    table_factor4 (  (LEFT|RIGHT) (OUTER)? JOIN table_factor4 join_condition  )?  
 ;
 table_factor4:
-    table_atom (  NATURAL ( (LEFT|RIGHT) (OUTER)? )? JOIN_SYM table_atom )?
+    table_atom (  NATURAL ( (LEFT|RIGHT) (OUTER)? )? JOIN table_atom )?
 ;
 
 table_atom:
       ( table_spec (partition_clause)? (alias)? (index_hint_list)? )
     | ( subquery alias )
     | ( LPAREN table_references RPAREN )
-    | ( OJ_SYM table_reference LEFT OUTER JOIN_SYM table_reference ON expression )
+    | ( OJ table_reference LEFT OUTER JOIN table_reference ON expression )
 ;
 
 join_condition:
-      (ON expression) | (USING_SYM column_list)
+      (ON expression) | (USING column_list)
 ;
 
 index_hint_list:    
@@ -1082,13 +1083,13 @@ index_hint_list:
 ;
 
 index_options:
-    (INDEX_SYM | KEY_SYM) (  FOR_SYM ((JOIN_SYM) | (ORDER_SYM BY_SYM) | (GROUP_SYM BY_SYM))  )?
+    (INDEX | KEY) (  FOR ((JOIN) | (ORDER BY) | (GROUP BY))  )?
 ;
 
 index_hint:
-      USE_SYM    index_options LPAREN (index_list)? RPAREN
-    | IGNORE_SYM index_options LPAREN index_list RPAREN
-    | FORCE_SYM  index_options LPAREN index_list RPAREN
+      USE    index_options LPAREN (index_list)? RPAREN
+    | IGNORE index_options LPAREN index_list RPAREN
+    | FORCE  index_options LPAREN index_list RPAREN
 ;
 
 index_list:
@@ -1096,7 +1097,7 @@ index_list:
 ;
 
 partition_clause:
-    PARTITION_SYM LPAREN partition_names RPAREN
+    PARTITION LPAREN partition_names RPAREN
 ;
 
 partition_names:    partition_name (COMMA partition_name)* ;
@@ -1105,7 +1106,7 @@ partition_names:    partition_name (COMMA partition_name)* ;
 
 // select ------  http://dev.mysql.com/doc/refman/5.6/en/select.html
 select_statement:
-        select_expression ( (UNION_SYM (ALL)?) select_expression )* 
+        select_expression ( (UNION (ALL)?) select_expression )* 
 ;
 
 select_expression:
@@ -1114,7 +1115,7 @@ select_expression:
     (HIGH_PRIORITY)?
     (STRAIGHT_JOIN)?
     (SQL_SMALL_RESULT)? (SQL_BIG_RESULT)? (SQL_BUFFER_RESULT)?
-    (SQL_CACHE_SYM | SQL_NO_CACHE_SYM)? (SQL_CALC_FOUND_ROWS)?
+    (SQL_CACHE | SQL_NO_CACHE)? (SQL_CALC_FOUND_ROWS)?
 
     select_list
 
@@ -1128,7 +1129,7 @@ select_expression:
 
     ( orderby_clause )?
     ( limit_clause )?
-    ( ( FOR_SYM UPDATE) | (LOCK IN_SYM SHARE_SYM MODE_SYM) )?
+    ( ( FOR UPDATE) | (LOCK IN SHARE MODE) )?
 ;
 
 where_clause:
@@ -1136,7 +1137,7 @@ where_clause:
 ;
 
 groupby_clause:
-    GROUP_SYM BY_SYM groupby_item (COMMA groupby_item)* (WITH ROLLUP_SYM)?
+    GROUP BY groupby_item (COMMA groupby_item)* (WITH ROLLUP)?
 ;
 groupby_item:   column_spec | INTEGER_NUM | bit_expr ;
 
@@ -1145,12 +1146,12 @@ having_clause:
 ;
 
 orderby_clause:
-    ORDER_SYM BY_SYM orderby_item (COMMA orderby_item)*
+    ORDER BY orderby_item (COMMA orderby_item)*
 ;
 orderby_item:   groupby_item (ASC | DESC)? ;
 
 limit_clause:
-    LIMIT ((offset COMMA)? row_count) | (row_count OFFSET_SYM offset)
+    LIMIT ((offset COMMA)? row_count) | (row_count OFFSET offset)
 ;
 offset:     INTEGER_NUM ;
 row_count:  INTEGER_NUM ;
@@ -1187,7 +1188,7 @@ displayed_column :
 
 // delete ------  http://dev.mysql.com/doc/refman/5.6/en/delete.html  ----
 delete_statements:
-    DELETE_SYM (LOW_PRIORITY)? (QUICK)? (IGNORE_SYM)?
+    DELETE (LOW_PRIORITY)? (QUICK)? (IGNORE)?
     ( delete_single_table_statement | delete_multiple_table_statement1 | delete_multiple_table_statement2 )
 ;
 
@@ -1207,7 +1208,7 @@ delete_multiple_table_statement1:
 ;
 delete_multiple_table_statement2:
     FROM table_spec (ALL_FIELDS)? (COMMA table_spec (ALL_FIELDS)?)*
-    USING_SYM table_references
+    USING table_references
     (where_clause)?
 ;
 
@@ -1221,14 +1222,13 @@ insert_statements :
 ;
 
 insert_header:
-    INSERT (LOW_PRIORITY | HIGH_PRIORITY)? (IGNORE_SYM)?
+    INSERT (LOW_PRIORITY | HIGH_PRIORITY)? (IGNORE)?
     (INTO)? table_spec
     (partition_clause)?
 ;
 
 insert_subfix:
-    ON DUPLICATE_SYM KEY_SYM UPDATE column_spec EQ_SYM expression (COMMA column_spec EQ_S
-YM expression)*
+    ON DUPLICATE KEY UPDATE column_spec EQ expression (COMMA column_spec EQ expression)*
 ;
 
 insert_statement1:
@@ -1237,7 +1237,7 @@ insert_statement1:
     value_list_clause
     ( insert_subfix )?
 ;
-value_list_clause:  (VALUES | VALUE_SYM) column_value_list (COMMA column_value_list)*;
+value_list_clause:  (VALUES | VALUE) column_value_list (COMMA column_value_list)*;
 column_value_list:  LPAREN (bit_expr|DEFAULT) (COMMA (bit_expr|DEFAULT) )* RPAREN ;
 
 insert_statement2:
@@ -1245,8 +1245,8 @@ insert_statement2:
     set_columns_cluase
     ( insert_subfix )?
 ;
-set_columns_cluase: SET_SYM set_column_cluase ( COMMA set_column_cluase )*;
-set_column_cluase:  column_spec EQ_SYM (expression|DEFAULT) ;
+set_columns_cluase: SET set_column_cluase ( COMMA set_column_cluase )*;
+set_column_cluase:  column_spec EQ (expression|DEFAULT) ;
 
 insert_statement3:
     insert_header
@@ -1263,7 +1263,7 @@ update_statements :
 ;
 
 single_table_update_statement:
-UPDATE (LOW_PRIORITY)? (IGNORE_SYM)? table_reference
+UPDATE (LOW_PRIORITY)? (IGNORE)? table_reference
     set_columns_cluase
     (where_clause)?
     (orderby_clause)?
@@ -1271,7 +1271,7 @@ UPDATE (LOW_PRIORITY)? (IGNORE_SYM)? table_reference
 ;
 
 multiple_table_update_statement:
-    UPDATE (LOW_PRIORITY)? (IGNORE_SYM)? table_references
+    UPDATE (LOW_PRIORITY)? (IGNORE)? table_references
     set_columns_cluase
     (where_clause)?
 ;
@@ -1279,64 +1279,64 @@ multiple_table_update_statement:
 
 // call -----------  http://dev.mysql.com/doc/refman/5.6/en/call.html 
 call_statement:
-    CALL_SYM procedure_name (LPAREN ( bit_expr (COMMA bit_expr)* )? RPAREN)?
+    CALL procedure_name (LPAREN ( bit_expr (COMMA bit_expr)* )? RPAREN)?
 ;
 
 
 // do --------------  http://dev.mysql.com/doc/refman/5.6/en/do.html 
 do_statement:
-    DO_SYM root_statement (COMMA root_statement)*
+    DO root_statement (COMMA root_statement)*
 ;
 
 
 // handler ------------  http://dev.mysql.com/doc/refman/5.6/en/handler.html 
 handler_statements:
-    HANDLER_SYM table_name
+    HANDLER table_name
     (open_handler_statement | handler_statement1 | handler_statement2 | handler_statement3 | close_handler_statement)
 ;
 
 open_handler_statement:
-    OPEN_SYM (alias)?
+    OPEN (alias)?
 ;
 
 handler_statement1:
-    READ_SYM index_name relational_op LPAREN bit_expr (COMMA bit_expr)* RPAREN
+    READ index_name relational_op LPAREN bit_expr (COMMA bit_expr)* RPAREN
     (where_clause)? (limit_clause)?
 ;
 
 handler_statement2:
-    READ_SYM index_name (FIRST_SYM | NEXT_SYM | PREV_SYM | LAST_SYM)
+    READ index_name (FIRST | NEXT | PREV | LAST)
     (where_clause)? (limit_clause)?
 ;
 
 handler_statement3:
-    READ_SYM (FIRST_SYM | NEXT_SYM)
+    READ (FIRST | NEXT)
     (where_clause)? (limit_clause)?
 ;
 
 close_handler_statement:
-    CLOSE_SYM
+    CLOSE
 ;
 
 // load data ------------  http://dev.mysql.com/doc/refman/5.6/en/load-data.html 
 load_data_statement:
-    LOAD DATA_SYM (LOW_PRIORITY | CONCURRENT)? (LOCAL_SYM)? INFILE TEXT_STRING
-    (REPLACE | IGNORE_SYM)?
+    LOAD DATA (LOW_PRIORITY | CONCURRENT)? (LOCAL)? INFILE TEXT_STRING
+    (REPLACE | IGNORE)?
     INTO TABLE table_spec
     (partition_clause)?
-    (CHARACTER_SYM SET_SYM charset_name)?
+    (CHARACTER SET charset_name)?
     (
-        (FIELDS_SYM | COLUMNS_SYM)
-        (TERMINATED BY_SYM TEXT_STRING)?
-        ((OPTIONALLY)? ENCLOSED BY_SYM TEXT_STRING)?
-        (ESCAPED BY_SYM TEXT_STRING)?
+        (FIELDS | COLUMNS)
+        (TERMINATED BY TEXT_STRING)?
+        ((OPTIONALLY)? ENCLOSED BY TEXT_STRING)?
+        (ESCAPED BY TEXT_STRING)?
     )?
     (
         LINES
-        (STARTING BY_SYM TEXT_STRING)?
-        (TERMINATED BY_SYM TEXT_STRING)?
+        (STARTING BY TEXT_STRING)?
+        (TERMINATED BY TEXT_STRING)?
     )?
-    (IGNORE_SYM INTEGER_NUM (LINES | ROWS_SYM))?
+    (IGNORE INTEGER_NUM (LINES | ROWS))?
     (LPAREN (column_spec|USER_VAR) (COMMA (column_spec|USER_VAR))* RPAREN)?
     (set_columns_cluase)?
 ;
@@ -1348,13 +1348,13 @@ load_data_statement:
 
 // load xml ---------------  http://dev.mysql.com/doc/refman/5.6/en/load-xml.html  ----------------------
 load_xml_statement:
-    LOAD XML_SYM (LOW_PRIORITY | CONCURRENT)? (LOCAL_SYM)? INFILE TEXT_STRING
-    (REPLACE | IGNORE_SYM)?
+    LOAD XML (LOW_PRIORITY | CONCURRENT)? (LOCAL)? INFILE TEXT_STRING
+    (REPLACE | IGNORE)?
     INTO TABLE table_spec
     (partition_clause)?
-    (CHARACTER_SYM SET_SYM charset_name)?
-    (ROWS_SYM IDENTIFIED_SYM BY_SYM TEXT_STRING)?
-    (IGNORE_SYM INTEGER_NUM (LINES | ROWS_SYM))?
+    (CHARACTER SET charset_name)?
+    (ROWS IDENTIFIED BY TEXT_STRING)?
+    (IGNORE INTEGER_NUM (LINES | ROWS))?
     (LPAREN (column_spec|USER_VAR) (COMMA (column_spec|USER_VAR))* RPAREN)?
     (set_columns_cluase)?
 ;
@@ -1371,7 +1371,7 @@ replace_statement:
 ;
 
 replace_statement_header:
-    REPLACE (LOW_PRIORITY | DELAYED_SYM)?
+    REPLACE (LOW_PRIORITY | DELAYED)?
     (INTO)? table_name
     (partition_clause)?
 ;
@@ -1392,15 +1392,15 @@ replace_statement3:
 
 // http://dev.mysql.com/doc/refman/5.6/en/create-database.html
 create_database_statement:
-    CREATE (DATABASE | SCHEMA) (IF NOT_SYM EXISTS)? schema_name
+    CREATE (DATABASE | SCHEMA) (IF NOT EXISTS)? schema_name
     ( create_specification (COMMA create_specification)* )*
 ;
 create_specification:
     (DEFAULT)?
     (
-        (  CHARACTER_SYM SET_SYM (EQ_SYM)? charset_name  )
+        (  CHARACTER SET (EQ)? charset_name  )
         |
-        (  COLLATE_SYM (EQ_SYM)? collation_name  )
+        (  COLLATE (EQ)? collation_name  )
     )
 ;
 
@@ -1415,12 +1415,12 @@ alter_database_statement1:
 ;
 alter_database_statement2:
     ALTER (DATABASE | SCHEMA) schema_name
-    UPGRADE_SYM DATA_SYM DIRECTORY_SYM NAME_SYM
+    UPGRADE DATA DIRECTORY NAME
 ;
 alter_database_specification:
-    (DEFAULT)? CHARACTER_SYM SET_SYM (EQ_SYM)? charset_name
+    (DEFAULT)? CHARACTER SET (EQ)? charset_name
     |
-    (DEFAULT)? COLLATE_SYM (EQ_SYM)? collation_names
+    (DEFAULT)? COLLATE (EQ)? collation_names
 
 ;
 
@@ -1438,26 +1438,26 @@ drop_database_statement:
 // http://dev.mysql.com/doc/refman/5.6/en/create-event.html
 create_event_statement:
     CREATE
-    (DEFINER EQ_SYM ( user_name | CURRENT_USER ))?
-    EVENT_SYM
-    (IF NOT_SYM EXISTS)?
+    (DEFINER EQ ( user_name | CURRENT_USER ))?
+    EVENT
+    (IF NOT EXISTS)?
     event_name
-    ON SCHEDULE_SYM schedule_definition
-    (ON COMPLETION_SYM (NOT_SYM)? PRESERVE_SYM)?
-    ( ENABLE_SYM | DISABLE_SYM | (DISABLE_SYM ON SLAVE) )?
-    (COMMENT_SYM TEXT_STRING)?
+    ON SCHEDULE schedule_definition
+    (ON COMPLETION (NOT)? PRESERVE)?
+    ( ENABLE | DISABLE | (DISABLE ON SLAVE) )?
+    (COMMENT TEXT_STRING)?
     do_statement
 ;
 
 schedule_definition:
-    ( AT_SYM timestamp (PLUS INTERVAL_SYM interval)* )
+    ( AT timestamp (PLUS_OP INTERVAL interval)* )
     |
-    ( EVERY_SYM interval )
-    ( STARTS_SYM timestamp (PLUS INTERVAL_SYM interval)* )?
-    ( ENDS_SYM timestamp (PLUS INTERVAL_SYM interval)* )?
+    ( EVERY interval )
+    ( STARTS timestamp (PLUS_OP INTERVAL interval)* )?
+    ( ENDS timestamp (PLUS_OP INTERVAL interval)* )?
 ;
 interval:
-    INTEGER_NUM (YEAR | QUARTER | MONTH | DAY_SYM | HOUR | MINUTE |
+    INTEGER_NUM (YEAR | QUARTER | MONTH | DAY | HOUR | MINUTE |
               WEEK | SECOND | YEAR_MONTH | DAY_HOUR | DAY_MINUTE |
               DAY_SECOND | HOUR_MINUTE | HOUR_SECOND | MINUTE_SECOND)
 
@@ -1473,20 +1473,20 @@ timestamp:
 // http://dev.mysql.com/doc/refman/5.6/en/alter-event.html
 alter_event_statement:
     ALTER
-    (DEFINER EQ_SYM ( user_name | CURRENT_USER ))?
-    EVENT_SYM event_name
-    (ON SCHEDULE_SYM schedule_definition)?
-    (ON COMPLETION_SYM (NOT_SYM)? PRESERVE_SYM)?
-    (RENAME TO_SYM event_name)?
-    ( ENABLE_SYM | DISABLE_SYM | (DISABLE_SYM ON SLAVE) )?
-    (COMMENT_SYM TEXT_STRING)?
+    (DEFINER EQ ( user_name | CURRENT_USER ))?
+    EVENT event_name
+    (ON SCHEDULE schedule_definition)?
+    (ON COMPLETION (NOT)? PRESERVE)?
+    (RENAME TO event_name)?
+    ( ENABLE | DISABLE | (DISABLE ON SLAVE) )?
+    (COMMENT TEXT_STRING)?
     (do_statement)?
 ;
 
 
 // http://dev.mysql.com/doc/refman/5.6/en/drop-event.html
 drop_event_statement:
-    DROP EVENT_SYM (IF EXISTS)? event_name
+    DROP EVENT (IF EXISTS)? event_name
 ;
 
 
@@ -1501,13 +1501,13 @@ create_function_statement:
 
 // http://dev.mysql.com/doc/refman/5.6/en/alter-function.html
 alter_function_statement:
-    ALTER FUNCTION_SYM function_name (characteristic)*
+    ALTER FUNCTION function_name (characteristic)*
 ;
 characteristic:
-      ( COMMENT_SYM TEXT_STRING )
-    | ( LANGUAGE SQL_SYM )
-    | ( (CONTAINS_SYM SQL_SYM) | (NO_SYM SQL_SYM) | (READS_SYM SQL_SYM DATA_SYM) | (MODIFIES_SYM SQL_SYM DATA_SYM) )
-    | ( SQL_SYM SECURITY_SYM (DEFINER | INVOKER_SYM) )
+      ( COMMENT TEXT_STRING )
+    | ( LANGUAGE SQL )
+    | ( (CONTAINS SQL) | (NO SQL) | (READS SQL DATA) | (MODIFIES SQL DATA) )
+    | ( SQL SECURITY (DEFINER | INVOKER) )
 ;
 // http://dev.mysql.com/doc/refman/5.6/en/drop-function.html
 drop_function_statement:
@@ -1521,22 +1521,22 @@ drop_function_statement:
 
 // http://dev.mysql.com/doc/refman/5.6/en/create-index.html
 create_index_statement:
-    CREATE (UNIQUE_SYM|FULLTEXT_SYM|SPATIAL_SYM)? INDEX_SYM index_name
+    CREATE (UNIQUE|FULLTEXT|SPATIAL)? INDEX index_name
     (index_type)?
     ON table_name LPAREN index_column_name (COMMA index_column_name)* RPAREN
     (algorithm_option | lock_option)*
 ;
 algorithm_option:
-    ALGORITHM_SYM (EQ_SYM)? (DEFAULT|INPLACE_SYM|COPY_SYM)
+    ALGORITHM (EQ)? (DEFAULT|INPLACE|COPY)
 ;
 lock_option:
-    LOCK (EQ_SYM)? (DEFAULT|NONE_SYM|SHARED_SYM|EXCLUSIVE_SYM)
+    LOCK (EQ)? (DEFAULT|NONE|SHARED|EXCLUSIVE)
 ;
 
 
 // http://dev.mysql.com/doc/refman/5.6/en/drop-index.html
 drop_index_statement:
-    DROP INDEX_SYM index_name ON table_name
+    DROP INDEX index_name ON table_name
     (algorithm_option | lock_option)*
 ;
 
@@ -1566,25 +1566,25 @@ drop_procedure_drop_function_statement:
 
 // http://dev.mysql.com/doc/refman/5.6/en/create-server.html
 create_server_statement:
-    CREATE SERVER_SYM server_name
-    FOREIGN DATA_SYM WRAPPER_SYM wrapper_name
-    OPTIONS_SYM LPAREN create_server_option (COMMA create_server_option)* RPAREN
+    CREATE SERVER server_name
+    FOREIGN DATA WRAPPER wrapper_name
+    OPTIONS LPAREN create_server_option (COMMA create_server_option)* RPAREN
 ;
 create_server_option:
-    | ( HOST_SYM string_literal )
+    | ( HOST string_literal )
     | ( DATABASE string_literal )
     | ( USER string_literal )
     | ( PASSWORD string_literal )
-    | ( SOCKET_SYM string_literal )
-    | ( OWNER_SYM string_literal )
-    | ( PORT_SYM number_literal )
+    | ( SOCKET string_literal )
+    | ( OWNER string_literal )
+    | ( PORT number_literal )
 ;
 
 
 // http://dev.mysql.com/doc/refman/5.6/en/alter-server.html
 alter_server_statement:
-    ALTER SERVER_SYM server_name
-    OPTIONS_SYM LPAREN alter_server_option (COMMA alter_server_option)* RPAREN
+    ALTER SERVER server_name
+    OPTIONS LPAREN alter_server_option (COMMA alter_server_option)* RPAREN
 ;
 alter_server_option:
     (USER) (ID|TEXT_STRING)
@@ -1593,7 +1593,7 @@ alter_server_option:
 
 // http://dev.mysql.com/doc/refman/5.6/en/drop-server.html
 drop_server_statement:
-    DROP SERVER_SYM (IF EXISTS)? server_name
+    DROP SERVER (IF EXISTS)? server_name
 ;
 
 
@@ -1607,7 +1607,7 @@ create_table_statement:
 ;
 
 create_table_statement1:
-    CREATE (TEMPORARY)? TABLE (IF NOT_SYM EXISTS)? table_name
+    CREATE (TEMPORARY)? TABLE (IF NOT EXISTS)? table_name
     LPAREN create_definition (COMMA create_definition)* RPAREN
     (table_options)?
     (partition_options)?
@@ -1615,72 +1615,72 @@ create_table_statement1:
 ;
 
 create_table_statement2:
-    CREATE (TEMPORARY)? TABLE (IF NOT_SYM EXISTS)? table_name
+    CREATE (TEMPORARY)? TABLE (IF NOT EXISTS)? table_name
     (table_options)?
     (partition_options)?
     select_statement
 ;
 
 create_table_statement3:
-    CREATE (TEMPORARY)? TABLE (IF NOT_SYM EXISTS)? table_name
-    ( (LIKE_SYM table_name) | (LPAREN LIKE_SYM table_name RPAREN) )
+    CREATE (TEMPORARY)? TABLE (IF NOT EXISTS)? table_name
+    ( (LIKE table_name) | (LPAREN LIKE table_name RPAREN) )
 ;
 
 create_definition:
       (  column_name column_definition  )
-    | (  (CONSTRAINT (constraint_symbol_name)?)? PRIMARY_SYM KEY_SYM (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (INDEX_SYM|KEY_SYM) (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (CONSTRAINT (constraint_symbol_name)?)? UNIQUE_SYM (INDEX_SYM|KEY_SYM)? (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (FULLTEXT_SYM|SPATIAL_SYM) (INDEX_SYM|KEY_SYM)? (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY_SYM (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN reference_definition  )
-    | (  CHECK_SYM LPAREN expression RPAREN  )
+    | (  (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (FULLTEXT|SPATIAL) (INDEX|KEY)? (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN reference_definition  )
+    | (  CHECK LPAREN expression RPAREN  )
 ;
 
 column_definition:
     column_data_type_header
-    (AUTO_INCREMENT)? ( (UNIQUE_SYM (KEY_SYM)?) | (PRIMARY_SYM (KEY_SYM)?) )?
-    (COMMENT_SYM TEXT_STRING)?
-    (COLUMN_FORMAT (FIXED_SYM|DYNAMIC_SYM|DEFAULT))?
+    (AUTO_INCREMENT)? ( (UNIQUE (KEY)?) | (PRIMARY (KEY)?) )?
+    (COMMENT TEXT_STRING)?
+    (COLUMN_FORMAT (FIXED|DYNAMIC|DEFAULT))?
     (reference_definition)?
 ;
 
 null_or_notnull:
-    (NOT_SYM NULL_SYM) | NULL_SYM
+    (NOT NULL) | NULL
 ;
 
 column_data_type_header:
-      (  BIT_SYM(LPAREN length RPAREN)? (null_or_notnull)? (DEFAULT bit_literal)?  )
-    | (  TINYINT(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  SMALLINT(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  MEDIUMINT(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  INT_SYM(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  INTEGER_SYM(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  BIGINT(LPAREN length RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  REAL(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  DOUBLE_SYM(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  FLOAT_SYM(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  DECIMAL_SYM(LPAREN length( COMMA number_literal)? RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  NUMERIC_SYM(LPAREN length( COMMA number_literal)? RPAREN)? (UNSIGNED_SYM)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
-    | (  DATE_SYM (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
-    | (  TIME_SYM (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
+      (  BIT(LPAREN length RPAREN)? (null_or_notnull)? (DEFAULT bit_literal)?  )
+    | (  TINYINT(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  SMALLINT(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  MEDIUMINT(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  INT(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  INTEGER(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  BIGINT(LPAREN length RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  REAL(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  DOUBLE(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  FLOAT(LPAREN length COMMA number_literal RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  DECIMAL(LPAREN length( COMMA number_literal)? RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  NUMERIC(LPAREN length( COMMA number_literal)? RPAREN)? (UNSIGNED)? (ZEROFILL)? (null_or_notnull)? (DEFAULT number_literal)?  )
+    | (  DATE (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
+    | (  TIME (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
     | (  TIMESTAMP (null_or_notnull)? (DEFAULT (CURRENT_TIMESTAMP|TEXT_STRING))?  )
     | (  DATETIME (null_or_notnull)? (DEFAULT (CURRENT_TIMESTAMP|TEXT_STRING))?  )
     | (  YEAR (null_or_notnull)? (DEFAULT INTEGER_NUM)?  )
-    | (  CHAR   (LPAREN length RPAREN)? (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
-    | (  VARCHAR LPAREN length RPAREN   (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
+    | (  CHAR   (LPAREN length RPAREN)? (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
+    | (  VARCHAR LPAREN length RPAREN   (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
     | (  BINARY   (LPAREN length RPAREN)? (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
     | (  VARBINARY LPAREN length RPAREN (null_or_notnull)? (DEFAULT TEXT_STRING)?  )
     | (  TINYBLOB (null_or_notnull)?  )
-    | (  BLOB_SYM (null_or_notnull)?  )
+    | (  BLOB (null_or_notnull)?  )
     | (  MEDIUMBLOB (null_or_notnull)?  )
     | (  LONGBLOB (null_or_notnull)?  )
-    | (  TINYTEXT   (BINARY)? (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)?  )
-    | (  TEXT_SYM   (BINARY)? (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)?  )
-    | (  MEDIUMTEXT (BINARY)? (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)?  )
-    | (  LONGTEXT   (BINARY)? (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)?  )
-    | (  ENUM    LPAREN TEXT_STRING (COMMA TEXT_STRING)* RPAREN (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)
+    | (  TINYTEXT   (BINARY)? (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)?  )
+    | (  TEXT   (BINARY)? (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)?  )
+    | (  MEDIUMTEXT (BINARY)? (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)?  )
+    | (  LONGTEXT   (BINARY)? (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)?  )
+    | (  ENUM    LPAREN TEXT_STRING (COMMA TEXT_STRING)* RPAREN (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)
 ?  )
-    | (  SET_SYM LPAREN TEXT_STRING (COMMA TEXT_STRING)* RPAREN (CHARACTER_SYM SET_SYM charset_name)? (COLLATE_SYM collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)
+    | (  SET LPAREN TEXT_STRING (COMMA TEXT_STRING)* RPAREN (CHARACTER SET charset_name)? (COLLATE collation_name)? (null_or_notnull)? (DEFAULT TEXT_STRING)
 ?  )
     //| (  spatial_type (null_or_notnull)? (DEFAULT default_value)?  )
 ;
@@ -1691,89 +1691,89 @@ index_column_name:
 
 reference_definition:
     REFERENCES table_name LPAREN index_column_name (COMMA index_column_name)* RPAREN
-    ( (MATCH FULL) | (MATCH PARTIAL) | (MATCH SIMPLE_SYM) )?
-    (ON DELETE_SYM reference_option)?
+    ( (MATCH FULL) | (MATCH PARTIAL) | (MATCH SIMPLE) )?
+    (ON DELETE reference_option)?
     (ON UPDATE reference_option)?
 ;
 reference_option:
-    (RESTRICT) | (CASCADE) | (SET_SYM NULL_SYM) | (NO_SYM ACTION)
+    (RESTRICT) | (CASCADE) | (SET NULL) | (NO ACTION)
 ;
 
 table_options:
     table_option (( COMMA )? table_option)*
 ;
 table_option:
-      (  ENGINE_SYM (EQ_SYM)? engine_name  )
-    | (  AUTO_INCREMENT (EQ_SYM)? INTEGER_NUM  )
-    | (  AVG_ROW_LENGTH (EQ_SYM)? INTEGER_NUM  )
-    | (  (DEFAULT)? CHARACTER_SYM SET_SYM (EQ_SYM)? charset_name  )
-    | (  CHECKSUM_SYM (EQ_SYM)? INTEGER_NUM  )
-    | (  (DEFAULT)? COLLATE_SYM (EQ_SYM)? collation_name  )
-    | (  COMMENT_SYM (EQ_SYM)? TEXT_STRING  )
-    | (  CONNECTION_SYM (EQ_SYM)? TEXT_STRING  )
-    | (  DATA_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING  )
-    | (  DELAY_KEY_WRITE_SYM (EQ_SYM)? INTEGER_NUM  )
-    | (  INDEX_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING  )
-    | (  INSERT_METHOD (EQ_SYM)? ( NO_SYM | FIRST_SYM | LAST_SYM )  )
-    | (  KEY_BLOCK_SIZE (EQ_SYM)? INTEGER_NUM  )
-    | (  MAX_ROWS (EQ_SYM)? INTEGER_NUM  )
-    | (  MIN_ROWS (EQ_SYM)? INTEGER_NUM  )
-    | (  PACK_KEYS_SYM (EQ_SYM)? (INTEGER_NUM | DEFAULT)  )
-    | (  PASSWORD (EQ_SYM)? TEXT_STRING  )
-    | (  ROW_FORMAT_SYM (EQ_SYM)? (DEFAULT|DYNAMIC_SYM|FIXED_SYM|COMPRESSED_SYM|REDUNDANT_SYM|COMPACT_SYM)  )
-    | (  STATS_AUTO_RECALC (EQ_SYM)? (DEFAULT | INTEGER_NUM)  )
-    | (  STATS_PERSISTENT (EQ_SYM)? (DEFAULT | INTEGER_NUM)  )
-    | (  UNION_SYM (EQ_SYM)? LPAREN table_name( COMMA table_name)* RPAREN  )
+      (  ENGINE (EQ)? engine_name  )
+    | (  AUTO_INCREMENT (EQ)? INTEGER_NUM  )
+    | (  AVG_ROW_LENGTH (EQ)? INTEGER_NUM  )
+    | (  (DEFAULT)? CHARACTER SET (EQ)? charset_name  )
+    | (  CHECKSUM (EQ)? INTEGER_NUM  )
+    | (  (DEFAULT)? COLLATE (EQ)? collation_name  )
+    | (  COMMENT (EQ)? TEXT_STRING  )
+    | (  CONNECTION (EQ)? TEXT_STRING  )
+    | (  DATA DIRECTORY (EQ)? TEXT_STRING  )
+    | (  DELAY_KEY_WRITE (EQ)? INTEGER_NUM  )
+    | (  INDEX DIRECTORY (EQ)? TEXT_STRING  )
+    | (  INSERT_METHOD (EQ)? ( NO | FIRST | LAST )  )
+    | (  KEY_BLOCK_SIZE (EQ)? INTEGER_NUM  )
+    | (  MAX_ROWS (EQ)? INTEGER_NUM  )
+    | (  MIN_ROWS (EQ)? INTEGER_NUM  )
+    | (  PACK_KEYS (EQ)? (INTEGER_NUM | DEFAULT)  )
+    | (  PASSWORD (EQ)? TEXT_STRING  )
+    | (  ROW_FORMAT (EQ)? (DEFAULT|DYNAMIC|FIXED|COMPRESSED|REDUNDANT|COMPACT)  )
+    | (  STATS_AUTO_RECALC (EQ)? (DEFAULT | INTEGER_NUM)  )
+    | (  STATS_PERSISTENT (EQ)? (DEFAULT | INTEGER_NUM)  )
+    | (  UNION (EQ)? LPAREN table_name( COMMA table_name)* RPAREN  )
 ;
 
 partition_options:
-    PARTITION_SYM BY_SYM
+    PARTITION BY
     (
-          ( (LINEAR_SYM)? HASH_SYM LPAREN expression RPAREN )
-        | ( (LINEAR_SYM)? KEY_SYM LPAREN column_list RPAREN )
-        | ( RANGE_SYM(LPAREN expression RPAREN | COLUMNS_SYM LPAREN column_list RPAREN) )
-        | ( LIST_SYM(LPAREN expression RPAREN | COLUMNS_SYM LPAREN column_list RPAREN) )
+          ( (LINEAR)? HASH LPAREN expression RPAREN )
+        | ( (LINEAR)? KEY LPAREN column_list RPAREN )
+        | ( RANGE(LPAREN expression RPAREN | COLUMNS LPAREN column_list RPAREN) )
+        | ( LIST(LPAREN expression RPAREN | COLUMNS LPAREN column_list RPAREN) )
     )
-    (PARTITIONS_SYM INTEGER_NUM)?
+    (PARTITIONS INTEGER_NUM)?
 
     (
-        SUBPARTITION_SYM BY_SYM
-        ( ( (LINEAR_SYM)? HASH_SYM LPAREN expression RPAREN ) | ( (LINEAR_SYM)? KEY_SYM LPAREN column_list RPAREN ) )
-        (SUBPARTITIONS_SYM INTEGER_NUM)?
+        SUBPARTITION BY
+        ( ( (LINEAR)? HASH LPAREN expression RPAREN ) | ( (LINEAR)? KEY LPAREN column_list RPAREN ) )
+        (SUBPARTITIONS INTEGER_NUM)?
     )?
 
     (LPAREN partition_definition ( COMMA  partition_definition)* RPAREN)?
 ;
 
 partition_definition:
-    PARTITION_SYM partition_name
+    PARTITION partition_name
 
     (
         VALUES
         (
-            (LESS_SYM THAN_SYM ( (LPAREN expression_list RPAREN) | MAXVALUE_SYM ))
+            (LESS THAN ( (LPAREN expression_list RPAREN) | MAXVALUE ))
             |
-            (IN_SYM LPAREN expression_list RPAREN)
+            (IN LPAREN expression_list RPAREN)
         )
     )?
 
-    ((STORAGE_SYM)? ENGINE_SYM (EQ_SYM)? engine_name)?
-    (COMMENT_SYM (EQ_SYM)? TEXT_STRING )?
-    (DATA_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING)?
-    (INDEX_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING)?
-    (MAX_ROWS (EQ_SYM)? INTEGER_NUM)?
-    (MIN_ROWS (EQ_SYM)? INTEGER_NUM)?
+    ((STORAGE)? ENGINE (EQ)? engine_name)?
+    (COMMENT (EQ)? TEXT_STRING )?
+    (DATA DIRECTORY (EQ)? TEXT_STRING)?
+    (INDEX DIRECTORY (EQ)? TEXT_STRING)?
+    (MAX_ROWS (EQ)? INTEGER_NUM)?
+    (MIN_ROWS (EQ)? INTEGER_NUM)?
     (LPAREN subpartition_definition (COMMA  subpartition_definition)* RPAREN)?
 ;
 
 subpartition_definition:
-    SUBPARTITION_SYM partition_logical_name
-    ((STORAGE_SYM)? ENGINE_SYM (EQ_SYM)? engine_name)?
-    (COMMENT_SYM (EQ_SYM)? TEXT_STRING )?
-    (DATA_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING)?
-    (INDEX_SYM DIRECTORY_SYM (EQ_SYM)? TEXT_STRING)?
-    (MAX_ROWS (EQ_SYM)? INTEGER_NUM)?
-    (MIN_ROWS (EQ_SYM)? INTEGER_NUM)?
+    SUBPARTITION partition_logical_name
+    ((STORAGE)? ENGINE (EQ)? engine_name)?
+    (COMMENT (EQ)? TEXT_STRING )?
+    (DATA DIRECTORY (EQ)? TEXT_STRING)?
+    (INDEX DIRECTORY (EQ)? TEXT_STRING)?
+    (MAX_ROWS (EQ)? INTEGER_NUM)?
+    (MIN_ROWS (EQ)? INTEGER_NUM)?
 ;
 
 length  :   INTEGER_NUM;
@@ -1781,65 +1781,65 @@ length  :   INTEGER_NUM;
 
 // http://dev.mysql.com/doc/refman/5.6/en/alter-table.html
 alter_table_statement:
-    ALTER (IGNORE_SYM)? TABLE table_name
+    ALTER (IGNORE)? TABLE table_name
     ( alter_table_specification (COMMA alter_table_specification)* )?
     ( partition_options )?
 ;
 alter_table_specification:
       table_options
-    | ( ADD_SYM (COLUMN_SYM)? column_name column_definition ( (FIRST_SYM|AFTER_SYM) column_name )? )
-    | ( ADD_SYM (COLUMN_SYM)? LPAREN column_definitions RPAREN )
-    | ( ADD_SYM (INDEX_SYM|KEY_SYM) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? PRIMARY_SYM KEY_SYM (index_type)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD (COLUMN)? column_name column_definition ( (FIRST|AFTER) column_name )? )
+    | ( ADD (COLUMN)? LPAREN column_definitions RPAREN )
+    | ( ADD (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_names RPAREN (index_option)* )
     |
         (        
-        ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? UNIQUE_SYM (INDEX_SYM|KEY_SYM)? (index_name)?
+        ADD (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)?
         (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*
         )
-    | ( ADD_SYM FULLTEXT_SYM (INDEX_SYM|KEY_SYM)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD_SYM SPATIAL_SYM (INDEX_SYM|KEY_SYM)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY_SYM (index_name)? LPAREN index_column_names RPAREN reference_definition )
-    | ( ALGORITHM_SYM (EQ_SYM)? (DEFAULT|INPLACE_SYM|COPY_SYM) )
-    | ( ALTER (COLUMN_SYM)? column_name ((SET_SYM DEFAULT literal_value) | (DROP DEFAULT)) )
-    | ( CHANGE (COLUMN_SYM)? column_name column_name column_definition (FIRST_SYM|AFTER_SYM column_name)? )
-    | ( LOCK (EQ_SYM)? (DEFAULT|NONE_SYM|SHARED_SYM|EXCLUSIVE_SYM) )
-    | ( MODIFY_SYM (COLUMN_SYM)? column_name column_definition (FIRST_SYM | AFTER_SYM column_name)? )
-    | ( DROP (COLUMN_SYM)? column_name )
-    | ( DROP PRIMARY_SYM KEY_SYM )
-    | ( DROP (INDEX_SYM|KEY_SYM) index_name )
-    | ( DROP FOREIGN KEY_SYM foreign_key_symbol_name )
-    | ( DISABLE_SYM KEYS )
-    | ( ENABLE_SYM KEYS )
-    | ( RENAME (TO_SYM|AS_SYM)? table_name )
-    | ( ORDER_SYM BY_SYM column_name (COMMA column_name)* )
-    | ( CONVERT_SYM TO_SYM CHARACTER_SYM SET_SYM charset_name (COLLATE_SYM collation_name)? )
-    | ( (DEFAULT)? CHARACTER_SYM SET_SYM (EQ_SYM)? charset_name (COLLATE_SYM (EQ_SYM)? collation_name)? )
+    | ( ADD FULLTEXT (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD SPATIAL (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_names RPAREN reference_definition )
+    | ( ALGORITHM (EQ)? (DEFAULT|INPLACE|COPY) )
+    | ( ALTER (COLUMN)? column_name ((SET DEFAULT literal_value) | (DROP DEFAULT)) )
+    | ( CHANGE (COLUMN)? column_name column_name column_definition (FIRST|AFTER column_name)? )
+    | ( LOCK (EQ)? (DEFAULT|NONE|SHARED|EXCLUSIVE) )
+    | ( MODIFY (COLUMN)? column_name column_definition (FIRST | AFTER column_name)? )
+    | ( DROP (COLUMN)? column_name )
+    | ( DROP PRIMARY KEY )
+    | ( DROP (INDEX|KEY) index_name )
+    | ( DROP FOREIGN KEY foreign_key_symbol_name )
+    | ( DISABLE KEYS )
+    | ( ENABLE KEYS )
+    | ( RENAME (TO|AS)? table_name )
+    | ( ORDER BY column_name (COMMA column_name)* )
+    | ( CONVERT TO CHARACTER SET charset_name (COLLATE collation_name)? )
+    | ( (DEFAULT)? CHARACTER SET (EQ)? charset_name (COLLATE (EQ)? collation_name)? )
     | ( DISCARD TABLESPACE )
     | ( IMPORT TABLESPACE )
-    | ( FORCE_SYM )
-    | ( ADD_SYM PARTITION_SYM LPAREN partition_definition RPAREN )
-    | ( DROP PARTITION_SYM partition_names )
-    | ( TRUNCATE PARTITION_SYM (partition_names | ALL) )
-    | ( COALESCE PARTITION_SYM INTEGER_NUM )
-    | ( REORGANIZE_SYM PARTITION_SYM partition_names INTO LPAREN partition_definition (COMMA partition_definition)* RPAREN )
-    | ( EXCHANGE_SYM PARTITION_SYM partition_name WITH TABLE table_name )
-    | ( ANALYZE_SYM PARTITION_SYM (partition_names | ALL) )
-    | ( CHECK_SYM PARTITION_SYM (partition_names | ALL) )
-    | ( OPTIMIZE PARTITION_SYM (partition_names | ALL) )
-    | ( REBUILD_SYM PARTITION_SYM (partition_names | ALL) )
-    | ( REPAIR PARTITION_SYM (partition_names | ALL) )
-    | ( REMOVE_SYM PARTITIONING_SYM )
+    | ( FORCE )
+    | ( ADD PARTITION LPAREN partition_definition RPAREN )
+    | ( DROP PARTITION partition_names )
+    | ( TRUNCATE PARTITION (partition_names | ALL) )
+    | ( COALESCE PARTITION INTEGER_NUM )
+    | ( REORGANIZE PARTITION partition_names INTO LPAREN partition_definition (COMMA partition_definition)* RPAREN )
+    | ( EXCHANGE PARTITION partition_name WITH TABLE table_name )
+    | ( ANALYZE PARTITION (partition_names | ALL) )
+    | ( CHECK PARTITION (partition_names | ALL) )
+    | ( OPTIMIZE PARTITION (partition_names | ALL) )
+    | ( REBUILD PARTITION (partition_names | ALL) )
+    | ( REPAIR PARTITION (partition_names | ALL) )
+    | ( REMOVE PARTITIONING )
 ;
 index_column_names:
     index_column_name (COMMA index_column_name)*;
 index_type:
-    USING_SYM (BTREE_SYM | HASH_SYM)
+    USING (BTREE | HASH)
 ;
 index_option:
-      ( KEY_BLOCK_SIZE (EQ_SYM)? INTEGER_NUM )
+      ( KEY_BLOCK_SIZE (EQ)? INTEGER_NUM )
     | index_type
-    | ( WITH PARSER_SYM parser_name )
-    | ( COMMENT_SYM TEXT_STRING )
+    | ( WITH PARSER parser_name )
+    | ( COMMENT TEXT_STRING )
 ;
 column_definitions:    
     column_name column_definition (COMMA column_name column_definition)*
@@ -1849,8 +1849,8 @@ column_definitions:
 // http://dev.mysql.com/doc/refman/5.6/en/rename-table.html
 rename_table_statement:
     RENAME TABLE
-    table_name TO_SYM table_name
-    (COMMA table_name TO_SYM table_name)*
+    table_name TO table_name
+    (COMMA table_name TO table_name)*
 ;
 
 
@@ -1871,7 +1871,7 @@ truncate_table_statement:
 // http://dev.mysql.com/doc/refman/5.6/en/create-trigger.html
 create_trigger_statement:
     CREATE
-    (DEFINER EQ_SYM (user_name | CURRENT_USER))?
+    (DEFINER EQ (user_name | CURRENT_USER))?
     // ...
 ;
 
@@ -1891,12 +1891,12 @@ create_view_statement:
 ;
 
 create_view_body:
-    (ALGORITHM_SYM EQ_SYM (UNDEFINED_SYM | MERGE_SYM | TEMPTABLE_SYM))?
-    (DEFINER EQ_SYM (user_name | CURRENT_USER) )?
-    (SQL_SYM SECURITY_SYM ( DEFINER | INVOKER_SYM ))?
-    VIEW_SYM view_name (LPAREN column_list RPAREN)?
-    AS_SYM select_statement
-    (WITH (CASCADED | LOCAL_SYM)? CHECK_SYM OPTION)?
+    (ALGORITHM EQ (UNDEFINED | MERGE | TEMPTABLE))?
+    (DEFINER EQ (user_name | CURRENT_USER) )?
+    (SQL SECURITY ( DEFINER | INVOKER ))?
+    VIEW view_name (LPAREN column_list RPAREN)?
+    AS select_statement
+    (WITH (CASCADED | LOCAL)? CHECK OPTION)?
 ;
 
 // http://dev.mysql.com/doc/refman/5.6/en/alter-view.html
@@ -1908,7 +1908,7 @@ alter_view_statement:
 
 // http://dev.mysql.com/doc/refman/5.6/en/drop-view.html
 drop_view_statement:
-    DROP VIEW_SYM (IF EXISTS)?
+    DROP VIEW (IF EXISTS)?
     view_name (COMMA view_name)*
     (RESTRICT | CASCADE)?
 ;
@@ -1933,7 +1933,7 @@ bool_primary:
 
 predicate:
       ( bit_expr (NOT)? IN (subquery | expression_list) )
-    | ( bit_expr (NOT)? BETWEEN bit_expr AND predicate )
+    | ( bit_expr (NOT)? BETWEEN bit_expr AND_SYM predicate )
     | ( bit_expr SOUNDS LIKE bit_expr )
     | ( bit_expr (NOT)? LIKE simple_expr (ESCAPE simple_expr)? )
     | ( bit_expr (NOT)? REGEXP bit_expr )
@@ -1950,7 +1950,7 @@ factor1:
 factor2:
     factor3 ( (SHIFT_LEFT|SHIFT_RIGHT) factor3 )? ;
 factor3:
-    factor4 ( (PLUS|MINUS) factor4 )? ;
+    factor4 ( (PLUS_OP|MINUS_OP) factor4 )? ;
 factor4:
     factor5 ( (ASTERISK|DIVIDE_OP|MOD_OP|POWER_OP) factor5 )? ;
 factor5:
@@ -2044,9 +2044,9 @@ functionList:
 
 function_call:
       (  functionList ( LPAREN (expression (COMMA expression)*)? RPAREN ) ?  )
-    | (  CAST_SYM LPAREN expression AS_SYM cast_data_type RPAREN  )
-    | (  CONVERT_SYM LPAREN expression COMMA cast_data_type RPAREN  )
-    | (  CONVERT_SYM LPAREN expression USING_SYM transcoding_name RPAREN  )
+    | (  CAST LPAREN expression AS cast_data_type RPAREN  )
+    | (  CONVERT LPAREN expression COMMA cast_data_type RPAREN  )
+    | (  CONVERT LPAREN expression USING transcoding_name RPAREN  )
     | (  group_functions LPAREN ( ASTERISK | ALL | DISTINCT )? bit_expr RPAREN  )
 ;
 
@@ -2084,7 +2084,7 @@ number_functions:
 ;	
 
 char_functions:
-	  ASCII_SYM
+	  ASCII
 	| BIN
 	| BIT_LENGTH
 	| CHAR_LENGTH
@@ -2139,7 +2139,7 @@ time_functions:
 	| DATE_ADD
 	| DATE_FORMAT
 	| DATE_SUB
-	| DATE_SYM
+	| DATE
 	| DATEDIFF
 	| DAYNAME
 	| DAYOFMONTH
@@ -2168,7 +2168,7 @@ time_functions:
 	| SYSDATE
 	| TIME_FORMAT
 	| TIME_TO_SEC
-	| TIME_SYM
+	| TIME
 	| TIMEDIFF
 	| TIMESTAMP
 	| TIMESTAMPADD
@@ -2196,7 +2196,7 @@ other_functions:
 	| OLD_PASSWORD | PASSWORD
 	| BENCHMARK | CHARSET | COERCIBILITY | COLLATION | CONNECTION_ID
 	| CURRENT_USER | DATABASE | SCHEMA | USER | SESSION_USER | SYSTEM_USER
-	| VERSION_SYM
+	| VERSION
 	| FOUND_ROWS | LAST_INSERT_ID | DEFAULT
 	| GET_LOCK | RELEASE_LOCK | IS_FREE_LOCK | IS_USED_LOCK | MASTER_POS_WAIT
 	| INET_ATON | INET_NTOA
@@ -2207,7 +2207,7 @@ other_functions:
 ;
 
 group_functions:
-	AVG | COUNT | MAX_SYM | MIN_SYM | SUM
+	AVG | COUNT | MAX | MIN | SUM
 	| BIT_AND | BIT_OR | BIT_XOR
 	| GROUP_CONCAT
 	| STD | STDDEV | STDDEV_POP | STDDEV_SAMP
@@ -2217,12 +2217,12 @@ group_functions:
 cast_data_type:
     BINARY (INTEGER_NUM)?
     | CHAR (INTEGER_NUM)?
-    | DATE_SYM
+    | DATE
     | DATETIME
-    | DECIMAL_SYM ( INTEGER_NUM (COMMA INTEGER_NUM)? )?
-    | SIGNED_SYM (INTEGER_SYM)?
-    | TIME_SYM
-    | UNSIGNED_SYM (INTEGER_SYM)?
+    | DECIMAL ( INTEGER_NUM (COMMA INTEGER_NUM)? )?
+    | SIGNED (INTEGER)?
+    | TIME
+    | UNSIGNED (INTEGER)?
 ;
 
 column_spec:
@@ -2252,12 +2252,12 @@ trigger_name:   ID;
 
 // basic const data definition --------------------------------------------------
 string_literal:     TEXT_STRING ;
-number_literal:     (PLUS | MINUS)? (INTEGER_NUM | REAL_NUMBER) ;
+number_literal:     (PLUS_OP | MINUS_OP)? (INTEGER_NUM | REAL_NUMBER) ;
 //date_time_literal:    ;
 hex_literal:        HEX_DIGIT ;
-boolean_literal:    TRUE_SYM | FALSE_SYM ;
+boolean_literal:    TRUE | FALSE ;
 bit_literal:        BIT_NUM ;
-null_literal:       NULL_SYM ;
+null_literal:       NULL ;
 
 // http://dev.mysql.com/doc/refman/5.6/en/literals.html
 literal_value:
@@ -2321,7 +2321,7 @@ show_databases_statement
 ;
 
 show_engine_statement
-	:	SHOW ENGINE engine_name (STATUS_SYM | MUTEX)
+	:	SHOW ENGINE engine_name (STATUS | MUTEX)
 ;
 
 show_engines_statement
@@ -2341,7 +2341,7 @@ show_function_code_statement
 	;
 	
 show_function_status_statement
-	:	SHOW FUNCTION STATUS_SYM like_or_where
+	:	SHOW FUNCTION STATUS like_or_where
 	;
 	
 /* ignore
@@ -2354,7 +2354,7 @@ show_index_statement
 	;
 
 show_master_status_statement
-	:	SHOW MASTER STATUS_SYM
+	:	SHOW MASTER STATUS
 ;
 
 show_open_tables_statement
@@ -2374,7 +2374,7 @@ show_procedure_code_statement
 	;
 	
 show_procedure_status_statement
-	:	SHOW PROCEDURE STATUS_SYM (like_or_where)?
+	:	SHOW PROCEDURE STATUS (like_or_where)?
 	;
 
 show_processlist_statement
@@ -2395,15 +2395,15 @@ show_slave_hosts_statement
 	;
 
 show_slave_status_statement
-	:	SHOW SLAVE STATUS_SYM
+	:	SHOW SLAVE STATUS
 	;
 
 show_status_statement
-	:	SHOW (GLOBAL|SESSION)? STATUS_SYM (like_or_where)?
+	:	SHOW (GLOBAL|SESSION)? STATUS (like_or_where)?
 	;
 	
 show_table_status_statement
-	:	SHOW TABLE STATUS_SYM ((FROM | IN) schema_name)? (like_or_where)?
+	:	SHOW TABLE STATUS ((FROM | IN) schema_name)? (like_or_where)?
 	;
 	
 show_tables_statement
@@ -2447,12 +2447,12 @@ reset
 // START TRANSACTION, COMMIT, and ROLLBACK Syntax ---> http://dev.mysql.com/doc/refman/5.6/en/commit.html 
 
 start_transaction_statement:
-    START_SYM TRANSACTION transaction_characteristic_list
+    START TRANSACTION transaction_characteristic_list
 ;
 
 // set transaction - http://dev.mysql.com/doc/refman/5.6/en/set-transaction.html
 set_transaction_statement:
-    SET_SYM (GLOBAL_SYM | SESSION_SYM)? TRANSACTION transaction_characteristic_list
+    SET (GLOBAL | SESSION)? TRANSACTION transaction_characteristic_list
 ;
 
 
@@ -2461,21 +2461,21 @@ transaction_characteristic_list:
 ;
 
 transaction_characteristic:
-      WITH CONSISTENT_SYM SNAPSHOT_SYM
-    | READ_SYM WRITE_SYM
-    | READ_SYM ONLY_SYM
+      WITH CONSISTENT SNAPSHOT
+    | READ WRITE
+    | READ ONLY
 ;
 
 begin_statement:
-    BEGIN_SYM (WORK_SYM)?
+    BEGIN (WORK)?
 ;
 
 commit_statement:
-    COMMIT_SYM (WORK_SYM)? (AND_KEY_SYM (NO_SYM)? CHAIN_SYM)? ((NO_SYM)? RELEASE_SYM)?
+    COMMIT (WORK)? (AND_SYM (NO)? CHAIN)? ((NO)? RELEASE)?
 ;
 
 rollback_statement:
-    ROLLBACK (WORK_SYM)? (AND_KEY_SYM (NO_SYM)? CHAIN_SYM)? ((NO_SYM)? RELEASE_SYM)?
+    ROLLBACK (WORK)? (AND_SYM (NO)? CHAIN)? ((NO)? RELEASE)?
 ;
 
 // savepoint - http://dev.mysql.com/doc/refman/5.6/en/savepoint.html
@@ -2484,15 +2484,15 @@ savepoint_statement:
 ;
 
 rollback_to_savepoint_statement:
-    ROLLBACK (WORK_SYM)? TO_SYM ID
+    ROLLBACK (WORK)? TO ID
 ;
 
 set_autocommit_statement:
-    SET_SYM (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM)? AUTOCOMMIT (EQ_SYM | SET_VAR) expression
+    SET (SYS_VAR_PREFIX | GLOBAL | SESSION)? AUTOCOMMIT (EQ | SET_VAR) expression
 ;
 
 release_savepoint_statement:
-    RELEASE_SYM SAVEPOINT ID
+    RELEASE SAVEPOINT ID
 ;
 
 // lock & unlock - http://dev.mysql.com/doc/refman/5.6/en/lock-tables.html
@@ -2505,12 +2505,12 @@ lock_type_list:
 ;
 
 lock_type:
-     READ_SYM (LOCAL_SYM)?
-   | (LOW_PRIORITY)? WRITE_SYM
+     READ (LOCAL)?
+   | (LOW_PRIORITY)? WRITE
 ;
 
 unlock_table_statement:
-    UNLOCK_SYM TABLES
+    UNLOCK TABLES
 ;
 
 
@@ -2543,7 +2543,6 @@ help_statement
 use_statement
 	:	USE schema_name
 	;
-parser grammar AdminStatement;
 
 ////////////////////// database admin statements ///////////////////////////
 // table maintenance statements - http://dev.mysql.com/doc/refman/5.6/en/table-maintenance-sql.html
@@ -2598,11 +2597,12 @@ charset_name_str:
 collation_names_str:
       collation_names
     | string_literal
-;parser grammar Charset;
+;
+
 
 charset_name:
       ARMSCII8
-    | ASCII_SYM
+    | ASCII
     | BIG5 
     | BINARY
     | CP1250
