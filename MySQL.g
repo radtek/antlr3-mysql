@@ -2,7 +2,7 @@ grammar MySQL;
 
 options 
 {
-    language=Java;
+    language=C;
     output=AST;
     //ASTLabelType=CommonTree; 
     backtrack=true;
