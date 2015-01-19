@@ -45,9 +45,8 @@ set_names_statement:
     SET_SYM NAMES_SYM (DEFAULT | charset_name_str (COLLATE_SYM collation_names_str)? )
 ;
 
-charset_name_str
-	:	
-	charset_name
+charset_name_str:	
+	  charset_name
 	| string_literal
 ;
 

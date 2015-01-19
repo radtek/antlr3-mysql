@@ -9,6 +9,12 @@ start_transaction_statement:
     START_SYM TRANSACTION transaction_characteristic_list
 ;
 
+// set transaction - http://dev.mysql.com/doc/refman/5.6/en/set-transaction.html
+set_transaction_statement:
+    SET_SYM (GLOBAL_SYM | SESSION_SYM)? TRANSACTION transaction_characteristic_list
+;
+
+
 transaction_characteristic_list:
     transaction_characteristic (COMMA transaction_characteristic)*
 ;
@@ -16,7 +22,8 @@ transaction_characteristic_list:
 transaction_characteristic:
       WITH CONSISTENT_SYM SNAPSHOT_SYM
     | READ_SYM WRITE_SYM
-    | READ_SYM ONLY_SYM;
+    | READ_SYM ONLY_SYM
+;
 
 begin_statement:
     BEGIN_SYM (WORK_SYM)?
