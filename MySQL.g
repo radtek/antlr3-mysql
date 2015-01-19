@@ -308,7 +308,7 @@ IFNULL                : I_ F_ N_ U_ L_ L_  ;
 IGNORE            : I_ G_ N_ O_ R_ E_  ;
 IMPORT                : I_ M_ P_ O_ R_ T_  ;
 IN                : I_ N_  ;
-INDEX            : I_ N_ D_ E_ X_  ;
+INDEX_SYM            : I_ N_ D_ E_ X_  ;
 INDEXES                : I_ N_ D_ E_ X_ E_ S_  ;
 INET_ATON            : I_ N_ E_ T_ '_' A_ T_ O_ N_  ;
 INET_NTOA            : I_ N_ E_ T_ '_' N_ T_ O_ A_  ;
@@ -1446,7 +1446,7 @@ index_hint_list:
 ;
 
 index_options:
-    (INDEX | KEY) (  FOR ((JOIN) | (ORDER BY) | (GROUP BY))  )?
+    (INDEX_SYM | KEY) (  FOR ((JOIN) | (ORDER BY) | (GROUP BY))  )?
 ;
 
 index_hint:
@@ -1883,7 +1883,7 @@ drop_function_statement:
 
 // http://dev.mysql.com/doc/refman/5.6/en/create-index.html
 create_index_statement:
-    CREATE (UNIQUE|FULLTEXT|SPATIAL)? INDEX index_name
+    CREATE (UNIQUE|FULLTEXT|SPATIAL)? INDEX_SYM index_name
     (index_type)?
     ON table_name LPAREN index_column_name (COMMA index_column_name)* RPAREN
     (algorithm_option | lock_option)*
@@ -1898,7 +1898,7 @@ lock_option:
 
 // http://dev.mysql.com/doc/refman/5.6/en/drop-index.html
 drop_index_statement:
-    DROP INDEX index_name ON table_name
+    DROP INDEX_SYM index_name ON table_name
     (algorithm_option | lock_option)*
 ;
 
@@ -1991,9 +1991,9 @@ create_table_statement3:
 create_definition:
       (  column_name column_definition  )
     | (  (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
-    | (  (FULLTEXT|SPATIAL) (INDEX|KEY)? (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (INDEX_SYM|KEY) (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX_SYM|KEY)? (index_name)? (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
+    | (  (FULLTEXT|SPATIAL) (INDEX_SYM|KEY)? (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*  )
     | (  (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_name (COMMA index_column_name)* RPAREN reference_definition  )
     | (  CHECK LPAREN expression RPAREN  )
 ;
@@ -2075,7 +2075,7 @@ table_option:
     | (  CONNECTION (EQ)? TEXT_STRING  )
     | (  DATA DIRECTORY (EQ)? TEXT_STRING  )
     | (  DELAY_KEY_WRITE (EQ)? INTEGER_NUM  )
-    | (  INDEX DIRECTORY (EQ)? TEXT_STRING  )
+    | (  INDEX_SYM DIRECTORY (EQ)? TEXT_STRING  )
     | (  INSERT_METHOD (EQ)? ( NO | FIRST | LAST )  )
     | (  KEY_BLOCK_SIZE (EQ)? INTEGER_NUM  )
     | (  MAX_ROWS (EQ)? INTEGER_NUM  )
@@ -2122,7 +2122,7 @@ partition_definition:
     ((STORAGE)? ENGINE (EQ)? engine_name)?
     (COMMENT (EQ)? TEXT_STRING )?
     (DATA DIRECTORY (EQ)? TEXT_STRING)?
-    (INDEX DIRECTORY (EQ)? TEXT_STRING)?
+    (INDEX_SYM DIRECTORY (EQ)? TEXT_STRING)?
     (MAX_ROWS (EQ)? INTEGER_NUM)?
     (MIN_ROWS (EQ)? INTEGER_NUM)?
     (LPAREN subpartition_definition (COMMA  subpartition_definition)* RPAREN)?
@@ -2133,7 +2133,7 @@ subpartition_definition:
     ((STORAGE)? ENGINE (EQ)? engine_name)?
     (COMMENT (EQ)? TEXT_STRING )?
     (DATA DIRECTORY (EQ)? TEXT_STRING)?
-    (INDEX DIRECTORY (EQ)? TEXT_STRING)?
+    (INDEX_SYM DIRECTORY (EQ)? TEXT_STRING)?
     (MAX_ROWS (EQ)? INTEGER_NUM)?
     (MIN_ROWS (EQ)? INTEGER_NUM)?
 ;
@@ -2151,15 +2151,15 @@ alter_table_specification:
       table_options
     | ( ADD_SYM (COLUMN)? column_name column_definition ( (FIRST|AFTER) column_name )? )
     | ( ADD_SYM (COLUMN)? LPAREN column_definitions RPAREN )
-    | ( ADD_SYM (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM (INDEX_SYM|KEY) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
     | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_names RPAREN (index_option)* )
     |
         (        
-        ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)?
+        ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX_SYM|KEY)? (index_name)?
         (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*
         )
-    | ( ADD_SYM FULLTEXT (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD_SYM SPATIAL (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM FULLTEXT (INDEX_SYM|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM SPATIAL (INDEX_SYM|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
     | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_names RPAREN reference_definition )
     | ( ALGORITHM (EQ)? (DEFAULT|INPLACE|COPY) )
     | ( ALTER (COLUMN)? column_name ((SET DEFAULT literal_value) | (DROP DEFAULT)) )
@@ -2168,7 +2168,7 @@ alter_table_specification:
     | ( MODIFY (COLUMN)? column_name column_definition (FIRST | AFTER column_name)? )
     | ( DROP (COLUMN)? column_name )
     | ( DROP PRIMARY KEY )
-    | ( DROP (INDEX|KEY) index_name )
+    | ( DROP (INDEX_SYM|KEY) index_name )
     | ( DROP FOREIGN KEY foreign_key_symbol_name )
     | ( DISABLE KEYS )
     | ( ENABLE KEYS )
@@ -2354,7 +2354,7 @@ show_grants_statement
 */
 
 show_index_statement
-	:	SHOW (INDEX|INDEXES|KEYS) (FROM|IN) table_spec ((FROM|IN) schema_name)? 
+	:	SHOW (INDEX_SYM|INDEXES|KEYS) (FROM|IN) table_spec ((FROM|IN) schema_name)? 
 			(WHERE expression)?
 	;
 
