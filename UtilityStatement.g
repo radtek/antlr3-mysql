@@ -1,4 +1,4 @@
-parser grammar Utility;
+parser grammar UtilityStatement;
 
 explain_statement
 	:	(EXPLAIN | DESCRIBE | DESC) table_spec (column_name)?
