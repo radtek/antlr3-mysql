@@ -8,8 +8,7 @@ options
     backtrack=true;
 }
 
-
-import Literal, Expression, Function, Identifier, Charset, DMLStatement;
+import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement;
 
 fragment A_ :    'a' | 'A';
 fragment B_ :    'b' | 'B';
@@ -984,57 +983,19 @@ replication_statements:
 */
 
 
-database_admin_statements:
-    // set statements
+database_admin_statements
+	:	
+      // set statements
       set_charset_statement
     | set_names_statement
     | set_usrvar_statement
     | set_sysvar_statement
-;
 
-
-set_usrvar_statement:
-    SET_SYM USER_VAR (SET_VAR | EQ_SYM) expression (COMMA USER_VAR (SET_VAR | EQ_SYM) expression)*
-;
-
-set_charset_statement:
-    SET_SYM CHARACTER_SYM SET_SYM (DEFAULT | charset_name_str)
-;
-
-set_sysvar_statement:
-    SET_SYM sys_var_id (SET_VAR | EQ_SYM) expression (COMMA sys_var_id (SET_VAR | EQ_SYM) expression)*
-;
-
-sys_var_id:
-    (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM) ID
-;
-
-set_names_statement:
-    SET_SYM NAMES_SYM (DEFAULT | charset_name_str (COLLATE_SYM collation_names_str)? )
-;
-
-charset_name_str
-	:	
-	charset_name
-	| string_literal
-;
-
-collation_names_str:
-      collation_names
-    | string_literal
-;
-
-// set transaction - http://dev.mysql.com/doc/refman/5.6/en/set-transaction.html
-set_transaction_statement:
-    SET_SYM (GLOBAL_SYM | SESSION_SYM)? TRANSACTION set_transaction_characteristic (COMMA set_transaction_characteristic)*
-;
-
-
-set_transaction_characteristic:
-    ISOLATION LEVEL_SYM (
-        REPEATABLE_SYM READ_SYM | READ_SYM COMMITTED_SYM | READ_SYM UNCOMMITTED_SYM
-            | SERIALIZABLE_SYM)
-    | READ_SYM WRITE_SYM
-    | READ_SYM ONLY_SYM
+      // table maintenance statement
+    | analyze_table_statement
+    | check_table_statement
+    | checksum_table_statement
+    | optimize_table_statement
+    | repair_table_statement
 ;
 	

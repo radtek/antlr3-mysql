@@ -34,16 +34,21 @@ set_charset_statement:
 ;
 
 set_sysvar_statement:
-    SET_SYM sys_var_id (SET_VAR | EQ_SYM) expression (COMMA SYS_VAR (SET_VAR | EQ_SYM) expression)*
+    SET_SYM sys_var_id (SET_VAR | EQ_SYM) expression (COMMA sys_var_id (SET_VAR | EQ_SYM) expression)*
+;
+
+sys_var_id:
+    (SYS_VAR_PREFIX | GLOBAL_SYM | SESSION_SYM) ID
 ;
 
 set_names_statement:
     SET_SYM NAMES_SYM (DEFAULT | charset_name_str (COLLATE_SYM collation_names_str)? )
 ;
 
-charset_name_str:
-      charset_name
-    | string_literal
+charset_name_str
+	:	
+	charset_name
+	| string_literal
 ;
 
 collation_names_str:
