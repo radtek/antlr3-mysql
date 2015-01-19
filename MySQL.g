@@ -42,7 +42,7 @@ ABS                : A_ B_ S_ ;
 ACCESSIBLE            : A_ C_ C_ E_ S_ S_ I_ B_ L_ E_  ;
 ACOS                : A_ C_ O_ S_ ;
 ACTION                : A_ C_ T_ I_ O_ N_  ;
-ADD                : A_ D_ D_  ;
+ADD_SYM                : A_ D_ D_  ;
 ADDDATE                : A_ D_ D_ D_ A_ T_ E_  ;
 ADDTIME                : A_ D_ D_ T_ I_ M_ E_  ;
 AES_DECRYPT            : A_ E_ S_ '_' D_ E_ C_ R_ Y_ P_ T_  ;
@@ -196,7 +196,7 @@ DEFINER                : D_ E_ F_ I_ N_ E_ R_ ;
 DEGREES                : D_ E_ G_ R_ E_ E_ S_  ;
 DELAY_KEY_WRITE        : D_ E_ L_ A_ Y_  '_' K_ E_ Y_  '_' W_ R_ I_ T_ E_  ;
 DELAYED            : D_ E_ L_ A_ Y_ E_ D_  ;
-DELETE            : D_ E_ L_ E_ T_ E_ ;
+DELETE_SYM            : D_ E_ L_ E_ T_ E_ ;
 DES_DECRYPT            : D_ E_ S_ '_' D_ E_ C_ R_ Y_ P_ T_  ;
 DES_ENCRYPT            : D_ E_ S_ '_' E_ N_ C_ R_ Y_ P_ T_  ;
 DES_KEY_FILE            : D_ E_ S_  '_' K_ E_ Y_  '_' F_ I_ L_ E_  ;
@@ -409,7 +409,7 @@ MASTER_SSL_VERIFY_SERVER_CERT    : M_ A_ S_ T_ E_ R_  '_' S_ S_ L_  '_' V_ E_ R_
 MASTER            : M_ A_ S_ T_ E_ R_  ;
 MASTER_USER            : M_ A_ S_ T_ E_ R_  '_' U_ S_ E_ R_  ;
 MATCH                : M_ A_ T_ C_ H_  ;
-MAX                : M_ A_ X_  ;
+MAX_SYM                : M_ A_ X_  ;
 MAX_CONNECTIONS_PER_HOUR    : M_ A_ X_  '_' C_ O_ N_ N_ E_ C_ T_ I_ O_ N_ S_  '_' P_ E_ R_  '_' H_ O_ U_ R_  ;
 MAX_QUERIES_PER_HOUR        : M_ A_ X_  '_' Q_ U_ E_ R_ I_ E_ S_  '_' P_ E_ R_  '_' H_ O_ U_ R_  ;
 MAX_ROWS            : M_ A_ X_  '_' R_ O_ W_ S_  ;
@@ -427,7 +427,7 @@ MERGE            : M_ E_ R_ G_ E_  ;
 MICROSECOND            : M_ I_ C_ R_ O_ S_ E_ C_ O_ N_ D_  ;
 MID                : M_ I_ D_  ;
 MIGRATE            : M_ I_ G_ R_ A_ T_ E_  ;
-MIN                : M_ I_ N_  ;
+MIN_SYM                : M_ I_ N_  ;
 MIN_ROWS            : M_ I_ N_  '_' R_ O_ W_ S_  ;
 MINUTE                : M_ I_ N_ U_ T_ E_  ;
 MINUTE_MICROSECOND        : M_ I_ N_ U_ T_ E_  '_' M_ I_ C_ R_ O_ S_ E_ C_ O_ N_ D_  ;
@@ -457,7 +457,7 @@ NODEGROUP            : N_ O_ D_ E_ G_ R_ O_ U_ P_  ;
 NONE            : N_ O_ N_ E_  ;
 NOT                : (N_ O_ T_) | ('!') ;
 NOW                : (N_ O_ W_) | (L_ O_ C_ A_ L_ T_ I_ M_ E_) | (L_ O_ C_ A_ L_ T_ I_ M_ E_ S_ T_ A_ M_ P_) | (C_ U_ R_ R_ E_ N_ T_ '_' T_ I_ M_ E_ S_ T_ A_ M_ P_);
-NULL            : N_ U_ L_ L_  ;
+NULL_SYM            : N_ U_ L_ L_  ;
 NUMERIC            : N_ U_ M_ E_ R_ I_ C_  ;
 NVARCHAR            : N_ V_ A_ R_ C_ H_ A_ R_  ;
 OCT                : O_ C_ T_  ;
@@ -513,7 +513,7 @@ PROFILE            : P_ R_ O_ F_ I_ L_ E_  ;
 PROFILES        : P_ R_ O_ F_ I_ L_ E_ S_  ;
 PURGE                : P_ U_ R_ G_ E_  ;
 QUARTER                : Q_ U_ A_ R_ T_ E_ R_  ;
-QUERY            : Q_ U_ E_ R_ Y_  ;
+QUERY_SYM            : Q_ U_ E_ R_ Y_  ;
 QUICK                : Q_ U_ I_ C_ K_  ;
 QUOTE                : Q_ U_ O_ T_ E_  ;
 RADIANS                : R_ A_ D_ I_ A_ N_ S_  ;
@@ -622,7 +622,7 @@ STARTING            : S_ T_ A_ R_ T_ I_ N_ G_  ;
 STATS_AUTO_RECALC        : S_ T_ A_ T_ S_ '_' A_ U_ T_ O_ '_' R_ E_ C_ A_ L_ C_  ;
 STATS_PERSISTENT        : S_ T_ A_ T_ S_ '_' P_ E_ R_ S_ I_ S_ T_ E_ N_ T_  ;
 STARTS            : S_ T_ A_ R_ T_ S_  ;
-STATUS            : S_ T_ A_ T_ U_ S_  ;
+STATUS_SYM            : S_ T_ A_ T_ U_ S_  ;
 STD                : S_ T_ D_  ;
 STDDEV                : S_ T_ D_ D_ E_ V_  ;
 STDDEV_POP            : S_ T_ D_ D_ E_ V_ '_' P_ O_ P_  ;
@@ -727,7 +727,7 @@ VARCHAR                : V_ A_ R_ C_ H_ A_ R_  ;
 VARIABLES            : V_ A_ R_ I_ A_ B_ L_ E_ S_  ;
 VARIANCE            : V_ A_ R_ I_ A_ N_ C_ E_  ;
 VARYING                : V_ A_ R_ Y_ I_ N_ G_ ;
-VERSION            : V_ E_ R_ S_ I_ O_ N_  ;
+VERSION_SYM            : V_ E_ R_ S_ I_ O_ N_  ;
 VIEW            : V_ I_ E_ W_  ;
 WAIT            : W_ A_ I_ T_  ;
 WARNINGS            : W_ A_ R_ N_ I_ N_ G_ S_  ;
@@ -1056,7 +1056,7 @@ expression:     exp_factor1 ( OR_OP exp_factor1 )* ;
 exp_factor1:    exp_factor2 ( XOR exp_factor2 )* ; 
 exp_factor2:    exp_factor3 ( AND_OP exp_factor3 )* ; 
 exp_factor3:    (NOT)? exp_factor4 ;
-exp_factor4:    bool_primary ( IS (NOT)? (boolean_literal|NULL) )? ; 
+exp_factor4:    bool_primary ( IS (NOT)? (boolean_literal|NULL_SYM) )? ; 
 bool_primary:
       ( predicate relational_op predicate ) 
     | ( predicate relational_op ( ALL | ANY )? subquery )
@@ -1113,9 +1113,9 @@ simple_expr:
 
 search_modifier:    
     (IN NATURAL LANGUAGE MODE)
-    | (IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)
+    | (IN NATURAL LANGUAGE MODE WITH QUERY_SYM EXPANSION)
     | (IN BOOLEAN MODE)
-    | (WITH QUERY EXPANSION)
+    | (WITH QUERY_SYM EXPANSION)
 ;
 
 case_when_statement:
@@ -1330,7 +1330,7 @@ other_functions:
 	| OLD_PASSWORD | PASSWORD
 	| BENCHMARK | CHARSET | COERCIBILITY | COLLATION | CONNECTION_ID
 	| CURRENT_USER | DATABASE | SCHEMA | USER | SESSION_USER | SYSTEM_USER
-	| VERSION
+	| VERSION_SYM
 	| FOUND_ROWS | LAST_INSERT_ID | DEFAULT
 	| GET_LOCK | RELEASE_LOCK | IS_FREE_LOCK | IS_USED_LOCK | MASTER_POS_WAIT
 	| INET_ATON | INET_NTOA
@@ -1341,7 +1341,7 @@ other_functions:
 ;
 
 group_functions:
-	AVG | COUNT | MAX | MIN | SUM
+	AVG | COUNT | MAX_SYM | MIN_SYM | SUM
 	| BIT_AND | BIT_OR | BIT_XOR
 	| GROUP_CONCAT
 	| STD | STDDEV | STDDEV_POP | STDDEV_SAMP
@@ -1395,7 +1395,7 @@ number_literal:     (PLUS_OP | MINUS_OP)? (INTEGER_NUM | REAL_NUMBER) ;
 hex_literal:        HEX_DIGIT ;
 boolean_literal:    TRUE | FALSE ;
 bit_literal:        BIT_NUM ;
-null_literal:       NULL ;
+null_literal:       NULL_SYM ;
 
 // http://dev.mysql.com/doc/refman/5.6/en/literals.html
 literal_value:
@@ -1551,7 +1551,7 @@ displayed_column :
 
 // delete ------  http://dev.mysql.com/doc/refman/5.6/en/delete.html  ----
 delete_statements:
-    DELETE (LOW_PRIORITY)? (QUICK)? (IGNORE)?
+    DELETE_SYM (LOW_PRIORITY)? (QUICK)? (IGNORE)?
     ( delete_single_table_statement | delete_multiple_table_statement1 | delete_multiple_table_statement2 )
 ;
 
@@ -2007,7 +2007,7 @@ column_definition:
 ;
 
 null_or_notnull:
-    (NOT NULL) | NULL
+    (NOT NULL_SYM) | NULL_SYM
 ;
 
 column_data_type_header:
@@ -2054,11 +2054,11 @@ index_column_name:
 reference_definition:
     REFERENCES table_name LPAREN index_column_name (COMMA index_column_name)* RPAREN
     ( (MATCH FULL) | (MATCH PARTIAL) | (MATCH SIMPLE) )?
-    (ON DELETE reference_option)?
+    (ON DELETE_SYM reference_option)?
     (ON UPDATE reference_option)?
 ;
 reference_option:
-    (RESTRICT) | (CASCADE) | (SET NULL) | (NO ACTION)
+    (RESTRICT) | (CASCADE) | (SET NULL_SYM) | (NO ACTION)
 ;
 
 table_options:
@@ -2149,18 +2149,18 @@ alter_table_statement:
 ;
 alter_table_specification:
       table_options
-    | ( ADD (COLUMN)? column_name column_definition ( (FIRST|AFTER) column_name )? )
-    | ( ADD (COLUMN)? LPAREN column_definitions RPAREN )
-    | ( ADD (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM (COLUMN)? column_name column_definition ( (FIRST|AFTER) column_name )? )
+    | ( ADD_SYM (COLUMN)? LPAREN column_definitions RPAREN )
+    | ( ADD_SYM (INDEX|KEY) (index_name)? (index_type)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? PRIMARY KEY (index_type)? LPAREN index_column_names RPAREN (index_option)* )
     |
         (        
-        ADD (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)?
+        ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? UNIQUE (INDEX|KEY)? (index_name)?
         (index_type)? LPAREN index_column_name (COMMA index_column_name)* RPAREN (index_option)*
         )
-    | ( ADD FULLTEXT (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD SPATIAL (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
-    | ( ADD (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_names RPAREN reference_definition )
+    | ( ADD_SYM FULLTEXT (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM SPATIAL (INDEX|KEY)? (index_name)? LPAREN index_column_names RPAREN (index_option)* )
+    | ( ADD_SYM (CONSTRAINT (constraint_symbol_name)?)? FOREIGN KEY (index_name)? LPAREN index_column_names RPAREN reference_definition )
     | ( ALGORITHM (EQ)? (DEFAULT|INPLACE|COPY) )
     | ( ALTER (COLUMN)? column_name ((SET DEFAULT literal_value) | (DROP DEFAULT)) )
     | ( CHANGE (COLUMN)? column_name column_name column_definition (FIRST|AFTER column_name)? )
@@ -2179,7 +2179,7 @@ alter_table_specification:
     | ( DISCARD TABLESPACE )
     | ( IMPORT TABLESPACE )
     | ( FORCE )
-    | ( ADD PARTITION LPAREN partition_definition RPAREN )
+    | ( ADD_SYM PARTITION LPAREN partition_definition RPAREN )
     | ( DROP PARTITION partition_names )
     | ( TRUNCATE PARTITION (partition_names | ALL) )
     | ( COALESCE PARTITION INTEGER_NUM )
@@ -2326,7 +2326,7 @@ show_databases_statement
 ;
 
 show_engine_statement
-	:	SHOW ENGINE engine_name (STATUS | MUTEX)
+	:	SHOW ENGINE engine_name (STATUS_SYM | MUTEX)
 ;
 
 show_engines_statement
@@ -2346,7 +2346,7 @@ show_function_code_statement
 	;
 	
 show_function_status_statement
-	:	SHOW FUNCTION STATUS like_or_where
+	:	SHOW FUNCTION STATUS_SYM like_or_where
 	;
 	
 /* ignore
@@ -2359,7 +2359,7 @@ show_index_statement
 	;
 
 show_master_status_statement
-	:	SHOW MASTER STATUS
+	:	SHOW MASTER STATUS_SYM
 ;
 
 show_open_tables_statement
@@ -2379,7 +2379,7 @@ show_procedure_code_statement
 	;
 	
 show_procedure_status_statement
-	:	SHOW PROCEDURE STATUS (like_or_where)?
+	:	SHOW PROCEDURE STATUS_SYM (like_or_where)?
 	;
 
 show_processlist_statement
@@ -2400,15 +2400,15 @@ show_slave_hosts_statement
 	;
 
 show_slave_status_statement
-	:	SHOW SLAVE STATUS
+	:	SHOW SLAVE STATUS_SYM
 	;
 
 show_status_statement
-	:	SHOW (GLOBAL|SESSION)? STATUS (like_or_where)?
+	:	SHOW (GLOBAL|SESSION)? STATUS_SYM (like_or_where)?
 	;
 	
 show_table_status_statement
-	:	SHOW TABLE STATUS ((FROM | IN) schema_name)? (like_or_where)?
+	:	SHOW TABLE STATUS_SYM ((FROM | IN) schema_name)? (like_or_where)?
 	;
 	
 show_tables_statement
