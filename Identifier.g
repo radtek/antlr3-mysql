@@ -4,8 +4,10 @@ column_spec:
     ( ( schema_name DOT )? table_name DOT )? column_name ;
 
 // identifiers ---  http://dev.mysql.com/doc/refman/5.6/en/identifiers.html 
-schema_name     : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
-table_name          : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
+schema_name
+	:	tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
+table_name
+	:	tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
 engine_name     : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
 column_name     : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
 view_name           : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
@@ -23,3 +25,5 @@ procedure_name      : tmpName=ID {System.out.println("schema name = " + $tmpName
 server_name     : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
 wrapper_name        : tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
 alias           : ( AS_SYM )? tmpName=ID {System.out.println("schema name = " + $tmpName.text);};
+trigger_name 
+	:	 tmpName=ID {System.out.println("schema name = " + $tmpName.text);};

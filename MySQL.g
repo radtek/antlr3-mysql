@@ -8,8 +8,8 @@ options
     backtrack=true;
 }
 
-import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement;
-
+import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement, ShowStatement;
+ 
 fragment A_ :    'a' | 'A';
 fragment B_ :    'b' | 'B';
 fragment C_ :    'c' | 'C';
@@ -170,6 +170,7 @@ CURRENT_USER        : C_ U_ R_ R_ E_ N_ T_ '_' U_ S_ E_ R_ ;
 CURSOR        : C_ U_ R_ S_ O_ R_  ;
 CURTIME            : (C_ U_ R_ T_ I_ M_ E_) | (C_ U_ R_ R_ E_ N_ T_ '_' T_ I_ M_ E_) ;
 DATABASE            : D_ A_ T_ A_ B_ A_ S_ E_  ;
+DATABASES           : D_ A_ T_ A_ B_ A_ S_ E_  S_;
 DATAFILE            : D_ A_ T_ A_ F_ I_ L_ E_  ;
 DATA            : D_ A_ T_ A_  ;
 DATE_ADD            : D_ A_ T_ E_ '_' A_ D_ D_  ;
@@ -202,6 +203,7 @@ DES_DECRYPT            : D_ E_ S_ '_' D_ E_ C_ R_ Y_ P_ T_  ;
 DES_ENCRYPT            : D_ E_ S_ '_' E_ N_ C_ R_ Y_ P_ T_  ;
 DES_KEY_FILE            : D_ E_ S_  '_' K_ E_ Y_  '_' F_ I_ L_ E_  ;
 DESC                : D_ E_ S_ C_  ;
+DESCRIBE 		: D_ E_ S_ C_ R_ I_ B_ E_ ;
 DETERMINISTIC        : D_ E_ T_ E_ R_ M_ I_ N_ I_ S_ T_ I_ C_  ;
 DIRECTORY            : D_ I_ R_ E_ C_ T_ O_ R_ Y_  ;
 DISABLE            : D_ I_ S_ A_ B_ L_ E_  ;
@@ -244,6 +246,7 @@ EXISTS                : E_ X_ I_ S_ T_ S_ ;
 EXIT            : E_ X_ I_ T_  ;
 EXP                : E_ X_ P_  ;
 EXPANSION            : E_ X_ P_ A_ N_ S_ I_ O_ N_  ;
+EXPLAIN			: E_ X_ P_ L_ A_ I_ N_ ;
 EXPORT_SET            : E_ X_ P_ O_ R_ T_ '_' S_ E_ T_  ;
 EXTENDED            : E_ X_ T_ E_ N_ D_ E_ D_  ;
 EXTENT_SIZE            : E_ X_ T_ E_ N_ T_  '_' S_ I_ Z_ E_  ;
@@ -529,6 +532,7 @@ REDOFILE            : R_ E_ D_ O_ F_ I_ L_ E_  ;
 REDUNDANT            : R_ E_ D_ U_ N_ D_ A_ N_ T_  ;
 REFERENCES            : R_ E_ F_ E_ R_ E_ N_ C_ E_ S_  ;
 REGEXP                : (R_ E_ G_ E_ X_ P_) | (R_ L_ I_ K_ E_);
+RELAYLOG				: R_ E_ L_ A_ Y_ L_ O_ G_;	
 RELAY_LOG_FILE        : R_ E_ L_ A_ Y_  '_' L_ O_ G_  '_' F_ I_ L_ E_  ;
 RELAY_LOG_POS        : R_ E_ L_ A_ Y_  '_' L_ O_ G_  '_' P_ O_ S_  ;
 RELEASE_LOCK            : R_ E_ L_ E_ A_ S_ E_ '_' L_ O_ C_ K_  ;
@@ -566,6 +570,7 @@ RTRIM                : R_ T_ R_ I_ M_  ;
 SAVEPOINT            : S_ A_ V_ E_ P_ O_ I_ N_ T_ ;
 SCHEDULE            : S_ C_ H_ E_ D_ U_ L_ E_  ;
 SCHEMA                : S_ C_ H_ E_ M_ A_  ;
+SCHEMAS                : S_ C_ H_ E_ M_ A_  S_;
 SEC_TO_TIME            : S_ E_ C_ '_' T_ O_ '_' T_ I_ M_ E_  ;
 SECOND                : S_ E_ C_ O_ N_ D_  ;
 SECOND_MICROSECOND        : S_ E_ C_ O_ N_ D_  '_' M_ I_ C_ R_ O_ S_ E_ C_ O_ N_ D_  ;
@@ -905,7 +910,9 @@ root_statement:
 	| data_definition_statements 
 	| transactional_locking_statements 
 	/*| replication_statements*/ 
-	| database_admin_statements )
+	| database_admin_statements 
+	| utility_statements
+	)
     (SEMI)?
 ;
 
@@ -1001,5 +1008,42 @@ database_admin_statements
     | checksum_table_statement
     | optimize_table_statement
     | repair_table_statement
-;
+    
+    // show statements
+    | show_binary_logs_statement
+    | show_binlog_events_statement
+    | show_character_set_statement
+    | show_collation_statement
+    | show_columns_statement
+    | show_create_database_statement
+    | show_create_statements
+    | show_databases_statement
+    | show_engine_statement
+    | show_engines_statement
+    | show_events_statement
+    | show_function_code_statement
+    | show_function_status_statement
+    | show_index_statement
+    | show_master_status_statement
+    | show_open_tables_statement
+    | show_plugins_statement
+    | show_privileges_statement
+    | show_procedure_code_statement
+    | show_procedure_status_statement
+    | show_processlist_statement
+    | show_relaylog_events_statement
+    | show_slave_hosts_statement
+    | show_slave_status_statement
+    | show_status_statement
+    | show_table_status_statement
+    | show_tables_statement
+    | show_triggers_statement
+    | show_variables_statement
+    | show_wes_statement
+	;
 	
+utility_statements
+	:	explain_statement
+	|	help_statement
+	|	use_statement
+	;
