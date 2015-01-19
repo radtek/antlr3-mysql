@@ -8,7 +8,7 @@ options
     backtrack=true;
 }
 
-import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement, ShowStatement;
+import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement, ShowStatement, UtilityStatement;
  
 fragment A_ :    'a' | 'A';
 fragment B_ :    'b' | 'B';
