@@ -1047,7 +1047,370 @@ utility_statements
 	|	use_statement
 	;
 
-// JOIN Syntax ----------  http://dev.mysql.com/doc/refman/5.6/en/join.html  ---------------
+//////////////////// expression clause //////////////////////
+// expression clause -------  http://dev.mysql.com/doc/refman/5.6/en/expressions.html -------------
+expression_list:
+    LPAREN expression ( COMMA expression )* RPAREN ;
+
+expression:     exp_factor1 ( OR_OP exp_factor1 )* ; 
+exp_factor1:    exp_factor2 ( XOR exp_factor2 )* ; 
+exp_factor2:    exp_factor3 ( AND_OP exp_factor3 )* ; 
+exp_factor3:    (NOT)? exp_factor4 ;
+exp_factor4:    bool_primary ( IS (NOT)? (boolean_literal|NULL) )? ; 
+bool_primary:
+      ( predicate relational_op predicate ) 
+    | ( predicate relational_op ( ALL | ANY )? subquery )
+    | ( NOT? EXISTS subquery )
+    | predicate 
+;
+
+predicate:
+      ( bit_expr (NOT)? IN (subquery | expression_list) )
+    | ( bit_expr (NOT)? BETWEEN bit_expr AND_SYM predicate )
+    | ( bit_expr SOUNDS LIKE bit_expr )
+    | ( bit_expr (NOT)? LIKE simple_expr (ESCAPE simple_expr)? )
+    | ( bit_expr (NOT)? REGEXP bit_expr )
+    | ( bit_expr )
+;
+
+relational_op:
+    EQ | LTH | GTH | NOT_EQ | LET | GET  ;
+
+bit_expr:
+    factor1 ( VERTBAR factor1 )? ;
+factor1:
+    factor2 ( BITAND factor2 )? ;
+factor2:
+    factor3 ( (SHIFT_LEFT|SHIFT_RIGHT) factor3 )? ;
+factor3:
+    factor4 ( (PLUS_OP|MINUS_OP) factor4 )? ;
+factor4:
+    factor5 ( (ASTERISK|DIVIDE_OP|MOD_OP|POWER_OP) factor5 )? ;
+factor5:
+    factor6 ( (PLUS_OP|MINUS_OP) interval_expr )? ;
+factor6:
+    (PLUS_OP | MINUS_OP | NEGATION | BINARY) simple_expr
+    | simple_expr ;
+
+factor7:
+    simple_expr (COLLATE collation_names)?;
+
+simple_expr:
+    literal_value
+    | column_spec
+    | function_call
+    //| param_marker
+    | USER_VAR
+    | expression_list
+    | (ROW expression_list)
+    | subquery
+    | EXISTS subquery
+    //| {identifier expression}
+    | match_against_statement
+    | case_when_statement
+    | interval_expr
+;
+
+search_modifier:    
+    (IN NATURAL LANGUAGE MODE)
+    | (IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)
+    | (IN BOOLEAN MODE)
+    | (WITH QUERY EXPANSION)
+;
+
+case_when_statement:
+        case_when_statement1 | case_when_statement2
+;
+
+case_when_statement1:
+        CASE
+        ( WHEN expression THEN bit_expr )+
+        ( ELSE bit_expr )?
+        END
+;
+
+case_when_statement2:
+        CASE bit_expr
+        ( WHEN bit_expr THEN bit_expr )+
+        ( ELSE bit_expr )?
+        END
+;
+
+match_against_statement:    
+    MATCH (column_spec (COMMA column_spec)* ) AGAINST (expression (search_modifier)? ) 
+;
+
+interval_expr:
+    INTERVAL expression interval_unit
+;
+
+interval_unit:
+      SECOND
+    | MINUTE
+    | HOUR 
+    | DAY
+    | WEEK 
+    | MONTH
+    | QUARTER
+    | YEAR 
+    | SECOND_MICROSECOND
+    | MINUTE_MICROSECOND
+    | MINUTE_SECOND
+    | HOUR_MICROSECOND
+    | HOUR_SECOND
+    | HOUR_MINUTE
+    | DAY_MICROSECOND
+    | DAY_SECOND
+    | DAY_MINUTE
+    | DAY_HOUR
+    | YEAR_MONTH
+;
+
+
+/////////////////// function clause /////////////////////////////////////
+// function defintion --  http://dev.mysql.com/doc/refman/5.6/en/func-op-summary-ref.html  ---
+functionList:
+      number_functions
+    | char_functions
+    | time_functions
+    | other_functions
+;
+
+function_call:
+      (  functionList ( LPAREN (expression (COMMA expression)*)? RPAREN ) ?  )
+    | (  CAST LPAREN expression AS cast_data_type RPAREN  )
+    | (  CONVERT LPAREN expression COMMA cast_data_type RPAREN  )
+    | (  CONVERT LPAREN expression USING transcoding_name RPAREN  )
+    | (  group_functions LPAREN ( ASTERISK | ALL | DISTINCT )? bit_expr RPAREN  )
+;
+
+number_functions:
+	  ABS
+	| ACOS
+	| ASIN
+	| ATAN2
+	| ATAN
+	| CEIL
+	| CEILING
+	| CONV
+	| COS
+	| COT
+	| CRC32
+	| DEGREES
+	| EXP
+	| FLOOR
+	| LN
+	| LOG10
+	| LOG2
+	| LOG
+	| MOD
+	| PI
+	| POW
+	| POWER
+	| RADIANS
+	| RAND
+	| ROUND
+	| SIGN
+	| SIN
+	| SQRT
+	| TAN
+	| TRUNCATE
+;	
+
+char_functions:
+	  ASCII
+	| BIN
+	| BIT_LENGTH
+	| CHAR_LENGTH
+	| CHAR
+	| CONCAT_WS
+	| CONCAT
+	| ELT
+	| EXPORT_SET
+	| FIELD
+	| FIND_IN_SET
+	| FORMAT
+	| FROM_BASE64
+	| HEX
+	| INSERT
+	| INSTR
+	| LEFT
+	| LENGTH
+	| LOAD_FILE
+	| LOCATE
+	| LOWER
+	| LPAD
+	| LTRIM
+	| MAKE_SET
+	| MID
+	| OCT
+	| ORD
+	| QUOTE
+	| REPEAT
+	| REPLACE
+	| REVERSE
+	| RIGHT
+	| RPAD
+	| RTRIM
+	| SOUNDEX
+	| SPACE
+	| STRCMP
+	| SUBSTRING_INDEX
+	| SUBSTRING
+	| TO_BASE64
+	| TRIM
+	| UNHEX
+	| UPPER
+	| WEIGHT_STRING
+;
+
+time_functions:
+	  ADDDATE
+	| ADDTIME
+	| CONVERT_TZ
+	| CURDATE
+	| CURTIME
+	| DATE_ADD
+	| DATE_FORMAT
+	| DATE_SUB
+	| DATE
+	| DATEDIFF
+	| DAYNAME
+	| DAYOFMONTH
+	| DAYOFWEEK
+	| DAYOFYEAR
+	| EXTRACT
+	| FROM_DAYS
+	| FROM_UNIXTIME
+	| GET_FORMAT
+	| HOUR
+	| LAST_DAY 
+	| MAKEDATE
+	| MAKETIME 
+	| MICROSECOND
+	| MINUTE
+	| MONTH
+	| MONTHNAME
+	| NOW
+	| PERIOD_ADD
+	| PERIOD_DIFF
+	| QUARTER
+	| SEC_TO_TIME
+	| SECOND
+	| STR_TO_DATE
+	| SUBTIME
+	| SYSDATE
+	| TIME_FORMAT
+	| TIME_TO_SEC
+	| TIME
+	| TIMEDIFF
+	| TIMESTAMP
+	| TIMESTAMPADD
+	| TIMESTAMPDIFF
+	| TO_DAYS
+	| TO_SECONDS
+	| UNIX_TIMESTAMP
+	| UTC_DATE
+	| UTC_TIME
+	| UTC_TIMESTAMP
+	| WEEK
+	| WEEKDAY
+	| WEEKOFYEAR
+	| YEAR
+	| YEARWEEK
+;
+
+other_functions:
+	MAKE_SET | LOAD_FILE
+	| IF | IFNULL
+	| AES_ENCRYPT | AES_DECRYPT
+	| DECODE | ENCODE
+	| DES_DECRYPT | DES_ENCRYPT
+	| ENCRYPT | MD5
+	| OLD_PASSWORD | PASSWORD
+	| BENCHMARK | CHARSET | COERCIBILITY | COLLATION | CONNECTION_ID
+	| CURRENT_USER | DATABASE | SCHEMA | USER | SESSION_USER | SYSTEM_USER
+	| VERSION
+	| FOUND_ROWS | LAST_INSERT_ID | DEFAULT
+	| GET_LOCK | RELEASE_LOCK | IS_FREE_LOCK | IS_USED_LOCK | MASTER_POS_WAIT
+	| INET_ATON | INET_NTOA
+	| NAME_CONST
+	| SLEEP
+	| UUID
+	| VALUES
+;
+
+group_functions:
+	AVG | COUNT | MAX | MIN | SUM
+	| BIT_AND | BIT_OR | BIT_XOR
+	| GROUP_CONCAT
+	| STD | STDDEV | STDDEV_POP | STDDEV_SAMP
+	| VAR_POP | VAR_SAMP | VARIANCE
+;
+
+cast_data_type:
+    BINARY (INTEGER_NUM)?
+    | CHAR (INTEGER_NUM)?
+    | DATE
+    | DATETIME
+    | DECIMAL ( INTEGER_NUM (COMMA INTEGER_NUM)? )?
+    | SIGNED (INTEGER)?
+    | TIME
+    | UNSIGNED (INTEGER)?
+;
+
+
+///////////// Identifiers Clause //////////////////
+column_spec:
+    ( ( schema_name DOT )? table_name DOT )? column_name ;
+
+// identifiers ---  http://dev.mysql.com/doc/refman/5.6/en/identifiers.html 
+schema_name:	ID;
+table_name:	    ID; 
+engine_name:    ID; 
+column_name:    ID;
+view_name:      ID;
+parser_name:    ID;
+index_name:     ID; 
+partition_name: ID; 
+partition_logical_name: ID;
+constraint_symbol_name: ID; 
+foreign_key_symbol_name:    ID;
+collation_name: ID;
+event_name:     ID; 
+user_name:      ID;
+function_name:  ID; 
+procedure_name: ID; 
+server_name:    ID;
+wrapper_name:   ID; 
+alias:   ( AS )? ID;
+trigger_name:   ID;
+
+
+//////////////////// Literal Clause /////////////
+// basic const data definition --------------------------------------------------
+string_literal:     TEXT_STRING ;
+number_literal:     (PLUS_OP | MINUS_OP)? (INTEGER_NUM | REAL_NUMBER) ;
+//date_time_literal:    ;
+hex_literal:        HEX_DIGIT ;
+boolean_literal:    TRUE | FALSE ;
+bit_literal:        BIT_NUM ;
+null_literal:       NULL ;
+
+// http://dev.mysql.com/doc/refman/5.6/en/literals.html
+literal_value:
+    ( string_literal 
+    | number_literal 
+    | hex_literal 
+    | boolean_literal 
+    | bit_literal 
+    | null_literal 
+    )
+;
+
+
+///////////////////////// DML Statement ///////////////////////////////////////
+// JOIN Syntax -----  http://dev.mysql.com/doc/refman/5.6/en/join.html  ------
 table_references:
         table_reference ( COMMA table_reference )*
 ;
@@ -1237,6 +1600,7 @@ insert_statement1:
     value_list_clause
     ( insert_subfix )?
 ;
+
 value_list_clause:  (VALUES | VALUE) column_value_list (COMMA column_value_list)*;
 column_value_list:  LPAREN (bit_expr|DEFAULT) (COMMA (bit_expr|DEFAULT) )* RPAREN ;
 
@@ -1390,6 +1754,8 @@ replace_statement3:
     select_statement
 ;
 
+
+/////////////////////////// DDL Statement ////////////////////
 // http://dev.mysql.com/doc/refman/5.6/en/create-database.html
 create_database_statement:
     CREATE (DATABASE | SCHEMA) (IF NOT EXISTS)? schema_name
@@ -1429,10 +1795,6 @@ alter_database_specification:
 drop_database_statement:
     DROP (DATABASE | SCHEMA) (IF EXISTS)? schema_name
 ;
-
-
-
-
 
 
 // http://dev.mysql.com/doc/refman/5.6/en/create-event.html
@@ -1914,364 +2276,7 @@ drop_view_statement:
 ;
 
 
-// expression statement -------  http://dev.mysql.com/doc/refman/5.6/en/expressions.html -------------
-
-expression_list:
-    LPAREN expression ( COMMA expression )* RPAREN ;
-
-expression:     exp_factor1 ( OR_OP exp_factor1 )* ; 
-exp_factor1:    exp_factor2 ( XOR exp_factor2 )* ; 
-exp_factor2:    exp_factor3 ( AND_OP exp_factor3 )* ; 
-exp_factor3:    (NOT)? exp_factor4 ;
-exp_factor4:    bool_primary ( IS (NOT)? (boolean_literal|NULL) )? ; 
-bool_primary:
-      ( predicate relational_op predicate ) 
-    | ( predicate relational_op ( ALL | ANY )? subquery )
-    | ( NOT? EXISTS subquery )
-    | predicate 
-;
-
-predicate:
-      ( bit_expr (NOT)? IN (subquery | expression_list) )
-    | ( bit_expr (NOT)? BETWEEN bit_expr AND_SYM predicate )
-    | ( bit_expr SOUNDS LIKE bit_expr )
-    | ( bit_expr (NOT)? LIKE simple_expr (ESCAPE simple_expr)? )
-    | ( bit_expr (NOT)? REGEXP bit_expr )
-    | ( bit_expr )
-;
-
-relational_op:
-    EQ | LTH | GTH | NOT_EQ | LET | GET  ;
-
-bit_expr:
-    factor1 ( VERTBAR factor1 )? ;
-factor1:
-    factor2 ( BITAND factor2 )? ;
-factor2:
-    factor3 ( (SHIFT_LEFT|SHIFT_RIGHT) factor3 )? ;
-factor3:
-    factor4 ( (PLUS_OP|MINUS_OP) factor4 )? ;
-factor4:
-    factor5 ( (ASTERISK|DIVIDE_OP|MOD_OP|POWER_OP) factor5 )? ;
-factor5:
-    factor6 ( (PLUS_OP|MINUS_OP) interval_expr )? ;
-factor6:
-    (PLUS_OP | MINUS_OP | NEGATION | BINARY) simple_expr
-    | simple_expr ;
-
-factor7:
-    simple_expr (COLLATE collation_names)?;
-
-simple_expr:
-    literal_value
-    | column_spec
-    | function_call
-    //| param_marker
-    | USER_VAR
-    | expression_list
-    | (ROW expression_list)
-    | subquery
-    | EXISTS subquery
-    //| {identifier expression}
-    | match_against_statement
-    | case_when_statement
-    | interval_expr
-;
-
-search_modifier:    
-    (IN NATURAL LANGUAGE MODE)
-    | (IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)
-    | (IN BOOLEAN MODE)
-    | (WITH QUERY EXPANSION)
-;
-
-case_when_statement:
-        case_when_statement1 | case_when_statement2
-;
-
-case_when_statement1:
-        CASE
-        ( WHEN expression THEN bit_expr )+
-        ( ELSE bit_expr )?
-        END
-;
-
-case_when_statement2:
-        CASE bit_expr
-        ( WHEN bit_expr THEN bit_expr )+
-        ( ELSE bit_expr )?
-        END
-;
-
-match_against_statement:    
-    MATCH (column_spec (COMMA column_spec)* ) AGAINST (expression (search_modifier)? ) 
-;
-
-interval_expr:
-    INTERVAL expression interval_unit
-;
-
-interval_unit:
-      SECOND
-    | MINUTE
-    | HOUR 
-    | DAY
-    | WEEK 
-    | MONTH
-    | QUARTER
-    | YEAR 
-    | SECOND_MICROSECOND
-    | MINUTE_MICROSECOND
-    | MINUTE_SECOND
-    | HOUR_MICROSECOND
-    | HOUR_SECOND
-    | HOUR_MINUTE
-    | DAY_MICROSECOND
-    | DAY_SECOND
-    | DAY_MINUTE
-    | DAY_HOUR
-    | YEAR_MONTH
-;
-
-// function defintion ------  http://dev.mysql.com/doc/refman/5.6/en/func-op-summary-ref.html  ----------
-
-functionList:
-      number_functions
-    | char_functions
-    | time_functions
-    | other_functions
-;
-
-function_call:
-      (  functionList ( LPAREN (expression (COMMA expression)*)? RPAREN ) ?  )
-    | (  CAST LPAREN expression AS cast_data_type RPAREN  )
-    | (  CONVERT LPAREN expression COMMA cast_data_type RPAREN  )
-    | (  CONVERT LPAREN expression USING transcoding_name RPAREN  )
-    | (  group_functions LPAREN ( ASTERISK | ALL | DISTINCT )? bit_expr RPAREN  )
-;
-
-number_functions:
-	  ABS
-	| ACOS
-	| ASIN
-	| ATAN2
-	| ATAN
-	| CEIL
-	| CEILING
-	| CONV
-	| COS
-	| COT
-	| CRC32
-	| DEGREES
-	| EXP
-	| FLOOR
-	| LN
-	| LOG10
-	| LOG2
-	| LOG
-	| MOD
-	| PI
-	| POW
-	| POWER
-	| RADIANS
-	| RAND
-	| ROUND
-	| SIGN
-	| SIN
-	| SQRT
-	| TAN
-	| TRUNCATE
-;	
-
-char_functions:
-	  ASCII
-	| BIN
-	| BIT_LENGTH
-	| CHAR_LENGTH
-	| CHAR
-	| CONCAT_WS
-	| CONCAT
-	| ELT
-	| EXPORT_SET
-	| FIELD
-	| FIND_IN_SET
-	| FORMAT
-	| FROM_BASE64
-	| HEX
-	| INSERT
-	| INSTR
-	| LEFT
-	| LENGTH
-	| LOAD_FILE
-	| LOCATE
-	| LOWER
-	| LPAD
-	| LTRIM
-	| MAKE_SET
-	| MID
-	| OCT
-	| ORD
-	| QUOTE
-	| REPEAT
-	| REPLACE
-	| REVERSE
-	| RIGHT
-	| RPAD
-	| RTRIM
-	| SOUNDEX
-	| SPACE
-	| STRCMP
-	| SUBSTRING_INDEX
-	| SUBSTRING
-	| TO_BASE64
-	| TRIM
-	| UNHEX
-	| UPPER
-	| WEIGHT_STRING
-;
-
-time_functions:
-	  ADDDATE
-	| ADDTIME
-	| CONVERT_TZ
-	| CURDATE
-	| CURTIME
-	| DATE_ADD
-	| DATE_FORMAT
-	| DATE_SUB
-	| DATE
-	| DATEDIFF
-	| DAYNAME
-	| DAYOFMONTH
-	| DAYOFWEEK
-	| DAYOFYEAR
-	| EXTRACT
-	| FROM_DAYS
-	| FROM_UNIXTIME
-	| GET_FORMAT
-	| HOUR
-	| LAST_DAY 
-	| MAKEDATE
-	| MAKETIME 
-	| MICROSECOND
-	| MINUTE
-	| MONTH
-	| MONTHNAME
-	| NOW
-	| PERIOD_ADD
-	| PERIOD_DIFF
-	| QUARTER
-	| SEC_TO_TIME
-	| SECOND
-	| STR_TO_DATE
-	| SUBTIME
-	| SYSDATE
-	| TIME_FORMAT
-	| TIME_TO_SEC
-	| TIME
-	| TIMEDIFF
-	| TIMESTAMP
-	| TIMESTAMPADD
-	| TIMESTAMPDIFF
-	| TO_DAYS
-	| TO_SECONDS
-	| UNIX_TIMESTAMP
-	| UTC_DATE
-	| UTC_TIME
-	| UTC_TIMESTAMP
-	| WEEK
-	| WEEKDAY
-	| WEEKOFYEAR
-	| YEAR
-	| YEARWEEK
-;
-
-other_functions:
-	MAKE_SET | LOAD_FILE
-	| IF | IFNULL
-	| AES_ENCRYPT | AES_DECRYPT
-	| DECODE | ENCODE
-	| DES_DECRYPT | DES_ENCRYPT
-	| ENCRYPT | MD5
-	| OLD_PASSWORD | PASSWORD
-	| BENCHMARK | CHARSET | COERCIBILITY | COLLATION | CONNECTION_ID
-	| CURRENT_USER | DATABASE | SCHEMA | USER | SESSION_USER | SYSTEM_USER
-	| VERSION
-	| FOUND_ROWS | LAST_INSERT_ID | DEFAULT
-	| GET_LOCK | RELEASE_LOCK | IS_FREE_LOCK | IS_USED_LOCK | MASTER_POS_WAIT
-	| INET_ATON | INET_NTOA
-	| NAME_CONST
-	| SLEEP
-	| UUID
-	| VALUES
-;
-
-group_functions:
-	AVG | COUNT | MAX | MIN | SUM
-	| BIT_AND | BIT_OR | BIT_XOR
-	| GROUP_CONCAT
-	| STD | STDDEV | STDDEV_POP | STDDEV_SAMP
-	| VAR_POP | VAR_SAMP | VARIANCE
-;
-
-cast_data_type:
-    BINARY (INTEGER_NUM)?
-    | CHAR (INTEGER_NUM)?
-    | DATE
-    | DATETIME
-    | DECIMAL ( INTEGER_NUM (COMMA INTEGER_NUM)? )?
-    | SIGNED (INTEGER)?
-    | TIME
-    | UNSIGNED (INTEGER)?
-;
-
-column_spec:
-    ( ( schema_name DOT )? table_name DOT )? column_name ;
-
-// identifiers ---  http://dev.mysql.com/doc/refman/5.6/en/identifiers.html 
-schema_name:	ID;
-table_name:	    ID; 
-engine_name:    ID; 
-column_name:    ID;
-view_name:      ID;
-parser_name:    ID;
-index_name:     ID; 
-partition_name: ID; 
-partition_logical_name: ID;
-constraint_symbol_name: ID; 
-foreign_key_symbol_name:    ID;
-collation_name: ID;
-event_name:     ID; 
-user_name:      ID;
-function_name:  ID; 
-procedure_name: ID; 
-server_name:    ID;
-wrapper_name:   ID; 
-alias:   ( AS )? ID;
-trigger_name:   ID;
-
-// basic const data definition --------------------------------------------------
-string_literal:     TEXT_STRING ;
-number_literal:     (PLUS_OP | MINUS_OP)? (INTEGER_NUM | REAL_NUMBER) ;
-//date_time_literal:    ;
-hex_literal:        HEX_DIGIT ;
-boolean_literal:    TRUE | FALSE ;
-bit_literal:        BIT_NUM ;
-null_literal:       NULL ;
-
-// http://dev.mysql.com/doc/refman/5.6/en/literals.html
-literal_value:
-    ( string_literal 
-    | number_literal 
-    | hex_literal 
-    | boolean_literal 
-    | bit_literal 
-    | null_literal 
-    )
-;
-
-
-// show statements ----- http://dev.mysql.com/doc/refman/5.6/en/show.html
+//////////////// show statements ----- http://dev.mysql.com/doc/refman/5.6/en/show.html
 
 /* ignore
 show_authors_statement
@@ -2514,6 +2519,7 @@ unlock_table_statement:
 ;
 
 
+////// Utility Statement ---- http://dev.mysql.com/doc/refman/5.6/en/sql-syntax-utility.html
 explain_statement
 	:	(EXPLAIN | DESCRIBE | DESC) table_spec (column_name)?
 	|	(EXPLAIN | DESCRIBE | DESC) (explain_type)? explainable_stmt
