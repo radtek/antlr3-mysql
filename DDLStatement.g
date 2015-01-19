@@ -72,6 +72,7 @@ interval:
               DAY_SECOND | HOUR_MINUTE | HOUR_SECOND | MINUTE_SECOND)
 
 ;
+
 timestamp:
     CURRENT_TIMESTAMP
     //| timestamp_literal 
