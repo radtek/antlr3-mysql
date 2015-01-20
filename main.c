@@ -9,8 +9,7 @@ void testParseSQL(char* line);
 
 void testSet() {
     testParseSQL("set @uservar=\"str\"");
-    testParseSQL("set @@autocommit=1");
-    testParseSQL("set @@global.autocommit=123");
+    testParseSQL("set @@global.sysvar=123");
     
     testParseSQL("set global sysvar=123");
     testParseSQL("set session sysvar=123");

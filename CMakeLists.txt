@@ -6,3 +6,6 @@ INCLUDE_DIRECTORIES(.)
 INCLUDE_DIRECTORIES(./include)
 
 ADD_LIBRARY(mysqlparser STATIC ${LIBSRC_LIST})
+
+ADD_EXECUTABLE(main main.c)
+TARGET_LINK_LIBRARIES(main mysqlparser antlr3c)
