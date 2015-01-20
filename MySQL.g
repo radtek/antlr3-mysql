@@ -8,7 +8,7 @@ options
     backtrack=true;
 }
 
-import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement, ShowStatement;
+import Literal, Expression, Function, Identifier, Charset, TransactionStatement, AdminStatement, DMLStatement, DDLStatement, ShowStatement, UtilityStatement;
  
 fragment A_ :    'a' | 'A';
 fragment B_ :    'b' | 'B';
@@ -833,8 +833,12 @@ fragment USER_VAR_SUBFIX2:    ( SINGLE_QUOTE (~SINGLE_QUOTE)+ SINGLE_QUOTE ) ;
 fragment USER_VAR_SUBFIX3:    ( DOUBLE_QUOTE (~DOUBLE_QUOTE)+ DOUBLE_QUOTE ) ;
 fragment USER_VAR_SUBFIX4:    ( 'A'..'Z' | 'a'..'z' | '_' | '$' | '0'..'9' | DOT )+ ;
 
-SYS_VAR_PREFIX: ('@@' (GLOBAL | SESSION)? DOT );
-fragment SYS_VAR_ID:    ID ;
+SYS_VAR_ALL
+	:	'@@' ID ;
+
+SYS_VAR_PREFIX 
+	:  ('@@' GLOBAL DOT) | ('@@' SESSION DOT) 
+	;
 
 
 WHITE_SPACE    : ( ' '|'\r'|'\t'|'\n' ) {$channel=HIDDEN;} ;

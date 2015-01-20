@@ -23,22 +23,8 @@ repair_table_statement:
     REPAIR (NO_WRITE_TO_BINLOG | LOCAL)? TABLE table_spec_list (QUICK)? (EXTENDED)? (USE_FRM)?
 ;
 
-
-// set statements
-set_usrvar_statement:
-    SET USER_VAR (SET_VAR | EQ) expression (COMMA USER_VAR (SET_VAR | EQ) expression)*
-;
-
 set_charset_statement:
     SET CHARACTER SET (DEFAULT | charset_name_str)
-;
-
-set_sysvar_statement:
-    SET sys_var_id (SET_VAR | EQ) expression (COMMA sys_var_id (SET_VAR | EQ) expression)*
-;
-
-sys_var_id:
-    (SYS_VAR_PREFIX | GLOBAL | SESSION) ID
 ;
 
 set_names_statement:
@@ -53,4 +39,32 @@ charset_name_str:
 collation_names_str:
       collation_names
     | string_literal
+;
+
+// set statements
+set_usrvar_statement:
+    SET USER_VAR (SET_VAR | EQ) expression (COMMA USER_VAR (SET_VAR | EQ) expression)*
+;
+
+set_sysvar_statement_1:	
+	SET (GLOBAL | SESSION) ID (SET_VAR | EQ) expression
+	;
+	
+set_sysvar_statement_2:
+    SET SYS_VAR_PREFIX ID (SET_VAR | EQ) expression
+    ;
+    
+set_sysvar_statement_3:
+	SET SYS_VAR_ALL (SET_VAR | EQ) expression
+	;
+
+set_sysvar_statement_4:	
+	SET ID (SET_VAR | EQ) expression
+	;
+	
+set_sysvar_statement
+	:	set_sysvar_statement_1
+	|	set_sysvar_statement_2
+	|	set_sysvar_statement_3
+	|	set_sysvar_statement_4
 ;
