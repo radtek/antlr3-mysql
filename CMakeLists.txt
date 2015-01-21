@@ -30,7 +30,6 @@ if (NOT ANTLR3C_FOUND)
     CONFIGURE_COMMAND autoreconf -i -s && ${PROJECT_SOURCE_DIR}/ext/antlr-runtime/configure
         --prefix=${PROJECT_BINARY_DIR}/antlr-wb
         --libdir=${PROJECT_BINARY_DIR}/antlr-wb
-        --enable-shared=false
     --disable-abiflags
     BUILD_COMMAND make
     BUILD_IN_SOURCE 1

@@ -34,7 +34,6 @@ main
 output
 
 # cmake files
-CMakeLists*
 CMakeFiles
 CMakeCache*
 cmake_install.cmake

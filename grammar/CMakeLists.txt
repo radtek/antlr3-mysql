@@ -53,7 +53,4 @@ target_link_libraries(mysqlparser ${ANTLR3C_LIBRARIES} ${GLIB_LIBRARIES})
 
 install(TARGETS mysqlparser DESTINATION ${INSTALL_LIB_DIR})
 
-install(DIRECTORY ${PROJECT_BINARY_DIR}/antlr-wb/ DESTINATION ${INSTALL_LIB_DIR} FILES_MATCHING
-    PATTERN "*.so"
-    PATTERN "*.so.*"
-)
+install(DIRECTORY ${PROJECT_BINARY_DIR}/antlr-wb/ DESTINATION ${INSTALL_LIB_DIR} )
