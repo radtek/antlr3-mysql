@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_DIRECTORY=..
+TARGET_DIRECTORY=$(pwd)
 GENERATE_FILES=false
 BASE_DIRECTORY=$(pwd)/lib
 LINUX_RES_JAR_PATH=$BASE_DIRECTORY/antlr-3.4-complete.jar

@@ -1,6 +1,6 @@
 #include "MySQLLexer.h"
 
-#include "MySQLParser.h"
+#include "MySQLSimpleParser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,15 +41,19 @@ void testParseSQL(char* line) {
     pANTLR3_INPUT_STREAM input;
     pMySQLLexer lex;
     pANTLR3_COMMON_TOKEN_STREAM tokens;
-    pMySQLParser parser;
+    pMySQLSimpleParser parser;
 
-    input = antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8) line, (ANTLR3_UINT32) strlen(line), (pANTLR3_UINT8) line);
+    input = antlr3StringStreamNew((pANTLR3_UINT8) line, ANTLR3_ENC_UTF8, (ANTLR3_UINT32) strlen(line), (pANTLR3_UINT8) line);
 
     lex = MySQLLexerNew(input);
     tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
-    parser = MySQLParserNew(tokens);
+    parser = MySQLSimpleParserNew(tokens);
 
+    printf("start statement .... ");
+    fflush(stdout);
     parser->statement(parser);
+    printf("end statement .... ");
+    fflush(stdout);
     
     parser->free(parser);
     tokens->free(tokens);

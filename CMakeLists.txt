@@ -1,8 +1,9 @@
 cmake_minimum_required (VERSION 2.8)
 
 PROJECT (MySQL)
-SET(LIBSRC_LIST MySQLLexer.c MySQLParser.c)
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+
+find_package(GTK2 2.20 REQUIRED gtk gtkmm)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 # All known publicly available versions of Antlr3C are buggy
 if (SKIP_BUNDLED_ANTLR)
@@ -38,10 +39,12 @@ if (NOT ANTLR3C_FOUND)
   link_directories(${PROJECT_BINARY_DIR}/antlr-wb)
 endif ()
 
-INCLUDE_DIRECTORIES(.)
-INCLUDE_DIRECTORIES(./ext/antlr-runtime/include)
-INCLUDE_DIRECTORIES(./ext/antlr-runtime/) # for antlr3config.h
-ADD_LIBRARY(mysqlparser STATIC ${LIBSRC_LIST})
+SET(INSTALL_LIB_DIR ./lib)
 
+ADD_SUBDIRECTORY(./grammar)
+
+INCLUDE_DIRECTORIES(./grammar
+        ${ANTLR3C_INCLUDE_DIRS}
+        )
 ADD_EXECUTABLE(main main.c)
 TARGET_LINK_LIBRARIES(main mysqlparser antlr3c_wb)
