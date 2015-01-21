@@ -8,18 +8,18 @@
 void testParseSQL(char* line);
 
 void testSet() {
-    testParseSQL("set @uservar=\"str\"");
-    testParseSQL("set @@global.sysvar=123");
+//    testParseSQL("set @uservar=\"str\"");
+//    testParseSQL("set @@global.sysvar=123");
 
-    testParseSQL("set @@ysvar = 123");
+//    testParseSQL("set @@sysvar = 123");
     
-    testParseSQL("set global sysvar=123");
-    testParseSQL("set session sysvar=123");
+    testParseSQL("SET GLOBAL sysvar = 123; ");
+    testParseSQL("SET SESSION sysvar = 123;");
     
     
-    testParseSQL("set autocommit=1");
+    testParseSQL("set autocommit=1;");
 
-    testParseSQL("set character set utf8");
+    testParseSQL("SET CHARACTER SET utf8");
     testParseSQL("set character set 'utf8'");
     testParseSQL("set names 'utf8'");
     testParseSQL("set names utf8");
@@ -43,7 +43,8 @@ void testParseSQL(char* line) {
     pANTLR3_COMMON_TOKEN_STREAM tokens;
     pMySQLSimpleParser parser;
 
-    input = antlr3StringStreamNew((pANTLR3_UINT8) line, ANTLR3_ENC_UTF8, (ANTLR3_UINT32) strlen(line), (pANTLR3_UINT8) line);
+    input = antlr3StringStreamNew((pANTLR3_UINT8) line, ANTLR3_ENC_8BIT, (ANTLR3_UINT32) strlen(line), (pANTLR3_UINT8) line);
+    input->setUcaseLA(input, ANTLR3_TRUE);
 
     lex = MySQLLexerNew(input);
     tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
@@ -51,7 +52,7 @@ void testParseSQL(char* line) {
 
     printf("start statement .... ");
     fflush(stdout);
-    parser->statement(parser);
+    parser->set_statement(parser);
     printf("end statement .... ");
     fflush(stdout);
     
