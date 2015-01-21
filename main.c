@@ -10,6 +10,8 @@ void testParseSQL(char* line);
 void testSet() {
     testParseSQL("set @uservar=\"str\"");
     testParseSQL("set @@global.sysvar=123");
+
+    testParseSQL("set @@ysvar = 123");
     
     testParseSQL("set global sysvar=123");
     testParseSQL("set session sysvar=123");
@@ -47,7 +49,7 @@ void testParseSQL(char* line) {
     tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
     parser = MySQLParserNew(tokens);
 
-    parser->root_statement(parser);
+    parser->statement(parser);
     
     parser->free(parser);
     tokens->free(tokens);
