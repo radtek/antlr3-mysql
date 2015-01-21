@@ -1267,7 +1267,7 @@ void MySQLRecognizer::parse(const char *text, size_t length, bool is_utf8, MySQL
 
 std::string MySQLRecognizer::dump_tree()
 {
-  log_debug2("Generating parse tree\n");
+  //log_debug2("Generating parse tree\n");
 
   return dump_tree(d->_ast, "");
 }

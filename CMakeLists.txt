@@ -46,5 +46,5 @@ ADD_SUBDIRECTORY(./grammar)
 INCLUDE_DIRECTORIES(./grammar
         ${ANTLR3C_INCLUDE_DIRS}
         )
-ADD_EXECUTABLE(main main.c)
+ADD_EXECUTABLE(main main.cpp)
 TARGET_LINK_LIBRARIES(main mysqlparser antlr3c_wb)

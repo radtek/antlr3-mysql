@@ -41,3 +41,5 @@ Makefile
 
 antlr-wb
 antlr-wb-prefix
+
+.libs

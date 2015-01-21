@@ -1,0 +1,64 @@
+#include "mysql-parser.h"
+#include "mysql-parser-common.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <set>
+#include <string>
+#include <iostream>
+
+void testParseSQL(const char* line);
+
+void testSet() {
+//    testParseSQL("set @uservar=\"str\"");
+//    testParseSQL("set @@global.sysvar=123");
+
+//    testParseSQL("set @@sysvar = 123");
+    
+    testParseSQL(std::string("SET GLOBAL sysvar = 123; ").c_str());
+    testParseSQL("SET SESSION sysvar = 123;");
+    
+    
+    testParseSQL("set autocommit=1;");
+
+    testParseSQL("SET CHARACTER SET utf8");
+    testParseSQL("set character set 'utf8'");
+    testParseSQL("set names 'utf8'");
+    testParseSQL("set names utf8");
+}
+
+struct my_tests_st
+{
+    const char *name;
+    void       (*function)();
+};
+
+static struct my_tests_st my_tests[]= {
+    {"testSet", testSet},
+    {0, 0}
+};
+
+std::set<std::string> charset ;
+
+void testParseSQL(const char* line) {
+    MySQLRecognizer* reg = new MySQLRecognizer(50600, std::string("STRICT_TRANS_TABLES"), charset);
+
+    reg->parse(line, strlen(line), false, QtSet);
+    std::cout << reg->dump_tree();
+
+    delete reg;
+}
+
+
+int main(int argc, char *argv[])
+{
+
+    charset.insert("utf8");
+    int i = 0;
+    while (my_tests[i].function != NULL) {
+        my_tests[i].function();
+        ++i;
+    }
+    return 0;
+}
