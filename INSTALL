@@ -1,0 +1,2 @@
+just type:
+    cmake . && make
