@@ -31,6 +31,7 @@ if (NOT ANTLR3C_FOUND)
         --prefix=${PROJECT_BINARY_DIR}/antlr-wb
         --libdir=${PROJECT_BINARY_DIR}/antlr-wb
     --disable-abiflags
+    --disable-shared
     BUILD_COMMAND make
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND make install
