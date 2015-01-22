@@ -124,11 +124,11 @@ typedef struct {
 	unsigned sql_mode; // A collection of flags indicating which of relevant SQL modes are active.
 	void *payload;     // Since we use the usercp for this struct we need another way to pass around other arbitrary data.
 
-	bool is_read;
-	bool impl_commit;
+	int is_read;
+	int impl_commit;
 	
 	int index;
-	const char* schema[64];
+	const char* schemas[64];
 	
 	int sql_type;
 } RecognitionContext;
@@ -141,6 +141,7 @@ typedef struct {
 #define SQL_MODE_IGNORE_SPACE           8
 #define SQL_MODE_NO_BACKSLASH_ESCAPES  16
 
+#define CONTEXT ((RecognitionContext*)RECOGNIZER->state->userp)
 #define PAYLOAD ((RecognitionContext*)RECOGNIZER->state->userp)->payload
 #define SERVER_VERSION ((RecognitionContext*)RECOGNIZER->state->userp)->version
 #define TYPE_FROM_VERSION(version, type) (SERVER_VERSION >= version ? type : IDENTIFIER)
@@ -265,21 +266,19 @@ extern "C" {
   
   void set_last_schema(const char* schema) 
   {
-  	RecognitionContext* _context = (RecognitionContext*) RECOGNIZER->state->userp;
-  	if (_context->index == 0) {
-  		_context->index = 1;
+  	if (CONTEXT->index == 0) {
+  		CONTEXT->index = 1;
   	}
   	
   	set_schema_impl(_context, _context->index - 1, schema);
   }
   
   void append_schemas(const char* schema) {
-  	RecognitionContext* _context = (RecognitionContext*) RECOGNIZER->state->userp;
-  	if (_context->index >= 64) {
+  	if (CONTEXT->index >= 64) {
   		return ;
   	}
   	
-  	_context->index ++;
+  	CONTEXT->index ++;
   	set_last_identifiers(schema);
   }
   

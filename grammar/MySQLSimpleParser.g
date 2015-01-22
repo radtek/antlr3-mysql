@@ -2663,12 +2663,18 @@ table_identifier:
 
 table_identifier_variants
 scope {
-	bool hasPrefix = false; 
+	int hasPrefix; 
+}
+@init {
+    hasPrefix = 0;
+}
+@after {
+    hasPrefix = 0;
 }
 :
 	// In order to avoid ambiguities with following identifiers (which could be starting with a dot) we match
 	// any (DOT identifier) sequence as part of this table identifier.
-	identifier { hasPrefix = true; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(((pANTLR3_BASE_TREE) LT(1))->text) }})? 
+	identifier { hasPrefix = 1; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(((pANTLR3_BASE_TREE) LT(1))->text) }})? 
 	| DOT_SYMBOL identifier
 ;
 
