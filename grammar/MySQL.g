@@ -123,7 +123,16 @@ typedef struct {
 	long version;
 	unsigned sql_mode; // A collection of flags indicating which of relevant SQL modes are active.
 	void *payload;     // Since we use the usercp for this struct we need another way to pass around other arbitrary data.
+
+	bool is_read;
+	bool impl_commit;
+	
+	int index;
+	const char* schema[64];
+	
+	int sql_type;
 } RecognitionContext;
+
 
 // SQL modes that control parsing behavior.
 #define SQL_MODE_ANSI_QUOTES            1
@@ -138,6 +147,10 @@ typedef struct {
 #define DEPRECATED_TYPE_FROM_VERSION(version, type) (SERVER_VERSION < version ? type : IDENTIFIER)
 #define SQL_MODE_ACTIVE(mode) (((RecognitionContext*)RECOGNIZER->state->userp)->sql_mode & mode) != 0
 
+#define IMPL_COMMIT ((RecognitionContext*)RECOGNIZER->state->userp)->impl_commit
+#define IS_READ ((RecognitionContext*)RECOGNIZER->state->userp)->is_read
+
+#define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
 }
 
 @lexer::header {
@@ -240,6 +253,36 @@ extern "C" {
     
     return LA(1) == '(' ? proposed : IDENTIFIER;
   }
+  
+  int set_schema_impl(RecognitionContext* _context, int idx, const char* schema) {
+  	if (idx < 0 || idx >= 64) {
+  		return - 1;
+  	}
+  	_context->schemas[idx] = schema;
+  	
+  	return 0;
+  }
+  
+  void set_last_schema(const char* schema) 
+  {
+  	RecognitionContext* _context = (RecognitionContext*) RECOGNIZER->state->userp;
+  	if (_context->index == 0) {
+  		_context->index = 1;
+  	}
+  	
+  	set_schema_impl(_context, _context->index - 1, schema);
+  }
+  
+  void append_schemas(const char* schema) {
+  	RecognitionContext* _context = (RecognitionContext*) RECOGNIZER->state->userp;
+  	if (_context->index >= 64) {
+  		return ;
+  	}
+  	
+  	_context->index ++;
+  	set_last_identifiers(schema);
+  }
+  
 }
 
 @lexer::apifuncs
@@ -287,7 +330,18 @@ query:
 
 statement:
 	// DDL
-	alter_statement
+	(ALTER_SYMBOL^
+  (
+	alter_database
+	| alter_log_file_group
+	| FUNCTION_SYMBOL function_identifier routine_alter_options?
+	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
+	| alter_server
+	| alter_table
+	| alter_tablespace
+	| {SERVER_VERSION >= 50100}? => alter_event
+	| alter_view
+  ))
 	| create_statement
 	| drop_statement
 	| rename_table_statement
@@ -326,20 +380,6 @@ statement:
 
 //----------------- DDL statements -----------------------------------------------------------------
 
-alter_statement:
-  ALTER_SYMBOL^
-  (
-	alter_database
-	| alter_log_file_group
-	| FUNCTION_SYMBOL function_identifier routine_alter_options?
-	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
-	| alter_server
-	| alter_table
-	| alter_tablespace
-	| {SERVER_VERSION >= 50100}? => alter_event
-	| alter_view
-  )
-;
 
 alter_database:
 	DATABASE_SYMBOL
