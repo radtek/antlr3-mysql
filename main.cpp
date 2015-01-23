@@ -1,4 +1,4 @@
-#include "mysql-parser.h"
+#include "mysql-syntax-check.h"
 #include "mysql-parser-common.h"
 
 #include <stdio.h>
@@ -28,6 +28,14 @@ void testSet() {
     testParseSQL("set names utf8");
 }
 
+void testSelect() {
+    testParseSQL("select * from db.table;");
+}
+
+void testAlert() {
+    testParseSQL("alter database dbname UPGRADE DATA DIRECTORY NAME");
+}
+
 struct my_tests_st
 {
     const char *name;
@@ -36,16 +44,18 @@ struct my_tests_st
 
 static struct my_tests_st my_tests[]= {
     {"testSet", testSet},
+    {"testSelect", testSelect},
+    {"testAlert", testAlert},
     {0, 0}
 };
 
 std::set<std::string> charset ;
 
 void testParseSQL(const char* line) {
-    MySQLRecognizer* reg = new MySQLRecognizer(50600, std::string("STRICT_TRANS_TABLES"), charset);
+    MySQLSyntaxChecker* reg = new MySQLSyntaxChecker(50600, std::string("STRICT_TRANS_TABLES"), charset);
 
-    reg->parse(line, strlen(line), false, QtSet);
-    std::cout << reg->dump_tree();
+    reg->parse(line, strlen(line), false, QtUnknown);
+    // std::cout << reg->dump_tree();
 
     delete reg;
 }

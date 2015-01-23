@@ -17,6 +17,9 @@
  * 02110-1301  USA
  */
 
+#ifndef MYSQL_TYPE_H_
+#define MYSQL_TYPE_H_
+
 // Describes the type of a given query.
 enum MySQLQueryType
 {
@@ -188,4 +191,6 @@ enum MySQLQueryType
   QtUse,
 
   QtSentinel
+
 };
+#endif

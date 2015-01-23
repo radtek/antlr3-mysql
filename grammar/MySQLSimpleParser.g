@@ -58,10 +58,11 @@ options {
 #endif
 
 #include "MySQLLexer.h" // Not automatically included by the generator.
+#include "mysql-type.h"
 
-
-#define PINDEX #define PAYLOAD ((RecognitionContext*)RECOGNIZER->state->userp)->index
+#define PINDEX ((RecognitionContext*)RECOGNIZER->state->userp)->index
 #define PSCHEMAS ((RecognitionContext*)RECOGNIZER->state->userp)->schemas
+#define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
 }
 
 @parser::postinclude {
@@ -88,12 +89,20 @@ extern "C" {
     return input == SELECT_SYMBOL ? ANTLR3_TRUE : ANTLR3_FALSE;
   }
 
-  void append_schemas(pMySQLSimpleParser ctx, ANTLR3_UINT8 schema) {
+  void append_schemas(pMySQLSimpleParser ctx, pANTLR3_UINT8 schema) {
     if (PINDEX >= 64) {
         return ;
     }
 
     PSCHEMAS[PINDEX++] = (const char*) schema;
+  }
+
+  void dump_schemas(pMySQLSimpleParser ctx) {
+    int i = 0;
+    while (i < PINDEX) {
+        printf("schema \%d:[\%s]\n", i, PSCHEMAS[i]);
+        ++i;
+    }
   }
 
 }
@@ -2660,7 +2669,7 @@ schema_identifier_pair:
 ;
 
 schema_name:
-	identifier { append_schemas(ctx, $text->chars); }
+	identifier { append_schemas(ctx, $text->chars); dump_schemas(ctx); }
 ;
 
 qualified_table_identifier: // Always qualified.
@@ -2673,15 +2682,15 @@ table_identifier:
 
 table_identifier_variants
 @init {
-    int hasPrefix = 0;
+    const char* hasPrefix = NULL;
 }
 @after {
-    hasPrefix = 0;
+    hasPrefix = NULL;
 }
 :
 	// In order to avoid ambiguities with following identifiers (which could be starting with a dot) we match
 	// any (DOT identifier) sequence as part of this table identifier.
-	identifier { hasPrefix = 1; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(ctx, ((pANTLR3_BASE_TREE) LT(1))->text); }})? 
+	identifier { hasPrefix = $text->chars; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(ctx, hasPrefix); dump_schemas(ctx); }})? 
 	| DOT_SYMBOL identifier
 ;
 
