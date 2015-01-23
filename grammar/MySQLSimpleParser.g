@@ -63,6 +63,7 @@ options {
 #define PINDEX ((RecognitionContext*)RECOGNIZER->state->userp)->index
 #define PSCHEMAS ((RecognitionContext*)RECOGNIZER->state->userp)->schemas
 #define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
+
 }
 
 @parser::postinclude {
@@ -121,7 +122,7 @@ query:
 
 statement:
 	// DDL
-	alter_statement {}
+	alter_statement 
 	| create_statement
 	| drop_statement
 	| rename_table_statement
@@ -2677,20 +2678,22 @@ qualified_table_identifier: // Always qualified.
 ;
 
 table_identifier:
-	table_identifier_variants
+	table_identifier_variants { if ($table_identifier_variants::hasPrefix) {append_schemas(ctx, $table_identifier_variants::Prefix); } }
 ;
 
 table_identifier_variants
-@init {
-    const char* hasPrefix = NULL;
+scope {
+    pANTLR3_UINT8 Prefix;
+    int hasPrefix;
 }
-@after {
-    hasPrefix = NULL;
+@init {
+    $table_identifier_variants::Prefix = 0;
+    $table_identifier_variants::hasPrefix = 0;
 }
 :
 	// In order to avoid ambiguities with following identifiers (which could be starting with a dot) we match
 	// any (DOT identifier) sequence as part of this table identifier.
-	identifier { hasPrefix = $text->chars; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(ctx, hasPrefix); dump_schemas(ctx); }})? 
+	identifier { $table_identifier_variants::Prefix = $text->chars; } ( options { greedy = true; }: DOT_SYMBOL identifier { $table_identifier_variants::hasPrefix = 1; })? 
 	| DOT_SYMBOL identifier
 ;
 
@@ -2730,8 +2733,16 @@ qualified_identifier_list:
 	qualified_identifier (COMMA_SYMBOL qualified_identifier)*
 ;       
 
-qualified_identifier:
-	identifier (DOT_SYMBOL identifier)?
+qualified_identifier
+scope {
+    pANTLR3_UINT8 Prefix;
+    int hasPrefix;
+}
+@init {
+    hasPrefix = 0;
+}
+:
+	identifier {Prefix = $text->chars;} (DOT_SYMBOL identifier {hasPrefix = 1;})?
 ;
 
 qualified_identifier_with_wildcard:
