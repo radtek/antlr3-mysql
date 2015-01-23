@@ -58,8 +58,10 @@ options {
 #endif
 
 #include "MySQLLexer.h" // Not automatically included by the generator.
-#include "mysql-parser-common.h"
 
+
+#define PINDEX #define PAYLOAD ((RecognitionContext*)RECOGNIZER->state->userp)->index
+#define PSCHEMAS ((RecognitionContext*)RECOGNIZER->state->userp)->schemas
 }
 
 @parser::postinclude {
@@ -84,6 +86,14 @@ extern "C" {
     while (input == OPEN_PAR_SYMBOL)
       input = LA(k++);
     return input == SELECT_SYMBOL ? ANTLR3_TRUE : ANTLR3_FALSE;
+  }
+
+  void append_schemas(pMySQLSimpleParser ctx, ANTLR3_UINT8 schema) {
+    if (PINDEX >= 64) {
+        return ;
+    }
+
+    PSCHEMAS[PINDEX++] = (const char*) schema;
   }
 
 }
@@ -2650,7 +2660,7 @@ schema_identifier_pair:
 ;
 
 schema_name:
-	identifier { append_schemas($text); }
+	identifier { append_schemas(ctx, $text->chars); }
 ;
 
 qualified_table_identifier: // Always qualified.
@@ -2662,11 +2672,8 @@ table_identifier:
 ;
 
 table_identifier_variants
-scope {
-	int hasPrefix; 
-}
 @init {
-    hasPrefix = 0;
+    int hasPrefix = 0;
 }
 @after {
     hasPrefix = 0;
@@ -2674,7 +2681,7 @@ scope {
 :
 	// In order to avoid ambiguities with following identifiers (which could be starting with a dot) we match
 	// any (DOT identifier) sequence as part of this table identifier.
-	identifier { hasPrefix = 1; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(((pANTLR3_BASE_TREE) LT(1))->text) }})? 
+	identifier { hasPrefix = 1; } ( options { greedy = true; }: DOT_SYMBOL identifier {if (hasPrefix) { append_schemas(ctx, ((pANTLR3_BASE_TREE) LT(1))->text); }})? 
 	| DOT_SYMBOL identifier
 ;
 

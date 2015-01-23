@@ -141,17 +141,12 @@ typedef struct {
 #define SQL_MODE_IGNORE_SPACE           8
 #define SQL_MODE_NO_BACKSLASH_ESCAPES  16
 
-#define CONTEXT ((RecognitionContext*)RECOGNIZER->state->userp)
 #define PAYLOAD ((RecognitionContext*)RECOGNIZER->state->userp)->payload
 #define SERVER_VERSION ((RecognitionContext*)RECOGNIZER->state->userp)->version
 #define TYPE_FROM_VERSION(version, type) (SERVER_VERSION >= version ? type : IDENTIFIER)
 #define DEPRECATED_TYPE_FROM_VERSION(version, type) (SERVER_VERSION < version ? type : IDENTIFIER)
 #define SQL_MODE_ACTIVE(mode) (((RecognitionContext*)RECOGNIZER->state->userp)->sql_mode & mode) != 0
 
-#define IMPL_COMMIT ((RecognitionContext*)RECOGNIZER->state->userp)->impl_commit
-#define IS_READ ((RecognitionContext*)RECOGNIZER->state->userp)->is_read
-
-#define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
 }
 
 @lexer::header {
@@ -253,33 +248,6 @@ extern "C" {
     }
     
     return LA(1) == '(' ? proposed : IDENTIFIER;
-  }
-  
-  int set_schema_impl(RecognitionContext* _context, int idx, const char* schema) {
-  	if (idx < 0 || idx >= 64) {
-  		return - 1;
-  	}
-  	_context->schemas[idx] = schema;
-  	
-  	return 0;
-  }
-  
-  void set_last_schema(const char* schema) 
-  {
-  	if (CONTEXT->index == 0) {
-  		CONTEXT->index = 1;
-  	}
-  	
-  	set_schema_impl(_context, _context->index - 1, schema);
-  }
-  
-  void append_schemas(const char* schema) {
-  	if (CONTEXT->index >= 64) {
-  		return ;
-  	}
-  	
-  	CONTEXT->index ++;
-  	set_last_identifiers(schema);
   }
   
 }
