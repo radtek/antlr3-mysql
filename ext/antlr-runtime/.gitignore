@@ -3,3 +3,17 @@ autom4te.cache
 *.lo
 config.log
 config.status
+
+m4
+
+.deps
+
+Makefile.in
+aclocal.m4
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+libtool
+missing

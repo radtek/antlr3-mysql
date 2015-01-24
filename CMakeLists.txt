@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 2.8)
 PROJECT (MySQL)
 
 find_package(GTK2 2.20 REQUIRED gtk gtkmm)
-pkg_check_modules(GLIB REQUIRED glib-2.0)
+#pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 # All known publicly available versions of Antlr3C are buggy
 if (SKIP_BUNDLED_ANTLR)
