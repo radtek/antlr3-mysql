@@ -122,11 +122,11 @@ query:
 
 statement:
 	// DDL
-	alter_statement 
-	| create_statement
-	| drop_statement
-	| rename_table_statement
-	| truncate_table_statement
+	alter_statement { /* SQL_TYPE set internal */ } 
+	| create_statement { /* SQL_TYPE set internal */ }
+	| drop_statement { /* SQL_TYPE set internal */ }
+	| rename_table_statement { SQL_TYPE = QtRenameTable; }
+	| truncate_table_statement { SQL_TYPE = QtTruncateTable; }
 	
 	// DML
 	| call_statement { SQL_TYPE = QtCall; }
@@ -354,20 +354,20 @@ alter_view:
 create_statement:
 	CREATE_SYMBOL
 	(
-		create_table_tail
-		| create_index_tail
-		| create_database_tail
+		create_table_tail { SQL_TYPE = QtCreateTable; }
+		| create_index_tail { SQL_TYPE = QtCreateIndex; }
+		| create_database_tail { SQL_TYPE = QtCreateDatabase; }
 		| definer_clause?
 			(
-				{SERVER_VERSION >= 50100}? => create_event_tail
-				| create_view_tail
-				| create_routine_or_udf
-				| create_trigger_tail
-			)
-		| view_replace_or_algorithm definer_clause? create_view_tail
-		| create_logfile_group_tail
-		| create_server_tail
-		| create_tablespace_tail
+				{SERVER_VERSION >= 50100}? => create_event_tail { SQL_TYPE = QtCreateEvent; }
+				| create_view_tail { SQL_TYPE = QtCreateView; }
+				| create_routine_or_udf { SQL_TYPE = QtCreateRoutine; }
+				| create_trigger_tail { SQL_TYPE = QtCreateTrigger; }
+			) 
+		| view_replace_or_algorithm definer_clause? create_view_tail { SQL_TYPE = QtCreateView; }
+		| create_logfile_group_tail { SQL_TYPE = QtCreateLogFileGroup; }
+		| create_server_tail { SQL_TYPE = QtCreateServer; }
+		| create_tablespace_tail { SQL_TYPE = QtCreateTableSpace; }
 	)
 ;
 
@@ -395,16 +395,23 @@ create_event_tail:
 		DO_SYMBOL compound_statement
 ;
 
-create_routine: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer create_routine_or_udf SEMICOLON_SYMBOL? EOF
+create_routine
+scope {
+  ANTLR3_UINT8 routine;
+}
+@init {
+  $create_routine::routine = 1;
+}
+: // For external use only. Don't reference this in the normal grammar.
+	create_with_definer create_routine_or_udf SEMICOLON_SYMBOL? EOF { /* SQL_TYPE set interval */ }
 ;
 
 create_procedure: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer procedure_body SEMICOLON_SYMBOL? EOF
+	create_with_definer procedure_body SEMICOLON_SYMBOL? EOF { SQL_TYPE = QtCreateProcedure; }
 ;
 
 create_function: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer function_body SEMICOLON_SYMBOL? EOF
+	create_with_definer function_body SEMICOLON_SYMBOL? EOF { SQL_TYPE = QtCreateFunction; }
 ;
 
 create_routine_or_udf:
@@ -414,15 +421,15 @@ create_routine_or_udf:
 
 procedure_body:
 	PROCEDURE_SYMBOL procedure_identifier OPEN_PAR_SYMBOL (procedure_parameter (COMMA_SYMBOL procedure_parameter)*)? CLOSE_PAR_SYMBOL
-		routine_create_options? compound_statement
+		routine_create_options? compound_statement { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateProcedure; } }
 ;
 
 function_body: // Both built-in functions and UDFs.
 	FUNCTION_SYMBOL
 	(
 		function_identifier OPEN_PAR_SYMBOL (function_parameter (COMMA_SYMBOL function_parameter)*)? CLOSE_PAR_SYMBOL RETURNS_SYMBOL
-			data_type routine_create_options? compound_statement
-		| udf_tail
+			data_type routine_create_options? compound_statement { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateFunction; } }
+		| udf_tail { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateUdf; } }
 	)
 	| AGGREGATE_SYMBOL FUNCTION_SYMBOL udf_tail // AGGREGATE is optional and in order to avoid ambiquities we have two udf paths.
 ;
@@ -623,16 +630,16 @@ view_algorithm:
 drop_statement:
 	DROP_SYMBOL
 	(
-		DATABASE_SYMBOL if_exists?  identifier
-		| {SERVER_VERSION >= 50100}? => EVENT_SYMBOL if_exists? qualified_identifier
-		| (FUNCTION_SYMBOL | PROCEDURE_SYMBOL) if_exists? qualified_identifier // UDF, stored procedure and stored function
-		| online_option? INDEX_SYMBOL identifier ON_SYMBOL table_identifier index_lock_algorithm?
-		| LOGFILE_SYMBOL GROUP_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)?
-		| SERVER_SYMBOL if_exists? text_or_identifier
-		| TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
-		| TABLESPACE_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)?
-		| TRIGGER_SYMBOL if_exists? qualified_identifier
-		| VIEW_SYMBOL if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+		DATABASE_SYMBOL if_exists?  identifier { SQL_TYPE = QtDropDatabase; }
+		| {SERVER_VERSION >= 50100}? => EVENT_SYMBOL if_exists? qualified_identifier { SQL_TYPE = QtDropEvent; }
+		| (FUNCTION_SYMBOL { SQL_TYPE = QtDropFunction; } | PROCEDURE_SYMBOL { SQL_TYPE = QtDropProcedure; } ) if_exists? qualified_identifier // UDF, stored procedure and stored function
+		| online_option? INDEX_SYMBOL identifier ON_SYMBOL table_identifier index_lock_algorithm? { SQL_TYPE = QtDropIndex; }
+		| LOGFILE_SYMBOL GROUP_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)? { SQL_TYPE = QtDropLogfileGroup; }
+		| SERVER_SYMBOL if_exists? text_or_identifier { SQL_TYPE = QtDropServer; }
+		| TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)? { SQL_TYPE = QtDropTable; }
+		| TABLESPACE_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)? { SQL_TYPE = QtDropTablespace; }
+		| TRIGGER_SYMBOL if_exists? qualified_identifier { SQL_TYPE = QtDropTrigger; }
+		| VIEW_SYMBOL if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)? { SQL_TYPE = QtDropView; }
 	)
 ;
 
