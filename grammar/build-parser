@@ -29,6 +29,17 @@ if [ $GENERATE_FILES == true ]; then
   fi
 
   java -Xmx1024m -jar "$ANTLR_JAR_PATH" -make $SOURCE_FILE -o $TARGET_DIRECTORY -Xmaxswitchcaselabels 30
+  if [ $? != 0 ]; then
+    rm "$TARGET_DIRECTORY/MySQLParser.c"
+    rm "$TARGET_DIRECTORY/MySQLParser.h"
+    exit 1
+  fi
+  
   java -Xmx1024m -jar "$ANTLR_JAR_PATH" -make $SOURCE_FILE2 -o $TARGET_DIRECTORY -Xmaxswitchcaselabels 30
+  if [ $? != 0 ]; then
+    rm "$TARGET_DIRECTORY/MySQLSimpleParser.c"
+    rm "$TARGET_DIRECTORY/MySQLSimpleParser.h"
+    exit 1
+  fi
 fi
 

@@ -2678,7 +2678,8 @@ qualified_table_identifier: // Always qualified.
 ;
 
 table_identifier:
-	table_identifier_variants { if ($table_identifier_variants::hasPrefix) {append_schemas(ctx, $table_identifier_variants::Prefix); } }
+	table_identifier_variants { if ($table_identifier_variants::hasPrefix)
+					{ append_schemas(ctx, $table_identifier_variants::Prefix); } }
 ;
 
 table_identifier_variants
@@ -2702,19 +2703,19 @@ table_identifier_list:
 ;       
 
 procedure_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 function_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 trigger_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
-view_identifier:
-	qualified_identifier
+view_identifier: 
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 tablespace_name:
@@ -2739,10 +2740,10 @@ scope {
     int hasPrefix;
 }
 @init {
-    hasPrefix = 0;
+    $qualified_identifier::hasPrefix = 0;
 }
 :
-	identifier {Prefix = $text->chars;} (DOT_SYMBOL identifier {hasPrefix = 1;})?
+	identifier {$qualified_identifier::Prefix = $text->chars;} (DOT_SYMBOL identifier {$qualified_identifier::hasPrefix = 1;})?
 ;
 
 qualified_identifier_with_wildcard:
