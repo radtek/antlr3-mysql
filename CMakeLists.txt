@@ -40,6 +40,7 @@ if (NOT ANTLR3C_FOUND)
   link_directories(${PROJECT_BINARY_DIR}/antlr-wb)
 endif ()
 
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 SET(INSTALL_LIB_DIR ./lib)
 
 ADD_SUBDIRECTORY(./grammar)

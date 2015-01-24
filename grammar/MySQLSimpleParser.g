@@ -58,6 +58,12 @@ options {
 #endif
 
 #include "MySQLLexer.h" // Not automatically included by the generator.
+#include "mysql-type.h"
+
+#define PINDEX ((RecognitionContext*)RECOGNIZER->state->userp)->index
+#define PSCHEMAS ((RecognitionContext*)RECOGNIZER->state->userp)->schemas
+#define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
+
 }
 
 @parser::postinclude {
@@ -83,6 +89,23 @@ extern "C" {
       input = LA(k++);
     return input == SELECT_SYMBOL ? ANTLR3_TRUE : ANTLR3_FALSE;
   }
+
+  void append_schemas(pMySQLSimpleParser ctx, pANTLR3_UINT8 schema) {
+    if (PINDEX >= 64) {
+        return ;
+    }
+
+    PSCHEMAS[PINDEX++] = (const char*) schema;
+  }
+
+  void dump_schemas(pMySQLSimpleParser ctx) {
+    int i = 0;
+    while (i < PINDEX) {
+        printf("schema \%d:[\%s]\n", i, PSCHEMAS[i]);
+        ++i;
+    }
+  }
+
 }
 
 @parser::apifuncs
@@ -99,7 +122,7 @@ query:
 
 statement:
 	// DDL
-	alter_statement
+	alter_statement 
 	| create_statement
 	| drop_statement
 	| rename_table_statement
@@ -141,23 +164,23 @@ statement:
 alter_statement:
   ALTER_SYMBOL
   (
-	alter_database
-	| alter_log_file_group
-	| FUNCTION_SYMBOL function_identifier routine_alter_options?
-	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
-	| alter_server
-	| alter_table
-	| alter_tablespace
-	| {SERVER_VERSION >= 50100}? => alter_event
-	| alter_view
+	alter_database { SQL_TYPE = QtAlterDatabase; }
+	| alter_log_file_group { SQL_TYPE = QtAlterLogFileGroup; }
+	| FUNCTION_SYMBOL function_identifier routine_alter_options? { SQL_TYPE = QtAlterFunction; }
+	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options? { SQL_TYPE = QtAlterProcedure; }
+	| alter_server { SQL_TYPE = QtAlterServer; }
+	| alter_table { SQL_TYPE = QtAlterTable; }
+	| alter_tablespace { SQL_TYPE = QtAlterTableSpace; }
+	| {SERVER_VERSION >= 50100}? => alter_event { SQL_TYPE = QtAlterEvent; }
+	| alter_view { SQL_TYPE = QtAlterView; }
   )
 ;
 
 alter_database:
 	DATABASE_SYMBOL
 	(
-		identifier? database_option+
-		| identifier UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL
+		schema_name? database_option+
+		| schema_name UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL
 	)
 ;
 
@@ -2647,7 +2670,7 @@ schema_identifier_pair:
 ;
 
 schema_name:
-	identifier
+	identifier { append_schemas(ctx, $text->chars); dump_schemas(ctx); }
 ;
 
 qualified_table_identifier: // Always qualified.
@@ -2655,13 +2678,23 @@ qualified_table_identifier: // Always qualified.
 ;
 
 table_identifier:
-	table_identifier_variants
+	table_identifier_variants { if ($table_identifier_variants::hasPrefix)
+					{ append_schemas(ctx, $table_identifier_variants::Prefix); } }
 ;
 
-table_identifier_variants:
+table_identifier_variants
+scope {
+    pANTLR3_UINT8 Prefix;
+    int hasPrefix;
+}
+@init {
+    $table_identifier_variants::Prefix = 0;
+    $table_identifier_variants::hasPrefix = 0;
+}
+:
 	// In order to avoid ambiguities with following identifiers (which could be starting with a dot) we match
 	// any (DOT identifier) sequence as part of this table identifier.
-	identifier ( options { greedy = true; }: DOT_SYMBOL identifier)?
+	identifier { $table_identifier_variants::Prefix = $text->chars; } ( options { greedy = true; }: DOT_SYMBOL identifier { $table_identifier_variants::hasPrefix = 1; })? 
 	| DOT_SYMBOL identifier
 ;
 
@@ -2670,19 +2703,19 @@ table_identifier_list:
 ;       
 
 procedure_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 function_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 trigger_identifier:
-	qualified_identifier
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
-view_identifier:
-	qualified_identifier
+view_identifier: 
+	qualified_identifier {if ($qualified_identifier::hasPrefix) {append_schemas(ctx, $qualified_identifier::Prefix); }}
 ;
 
 tablespace_name:
@@ -2701,8 +2734,16 @@ qualified_identifier_list:
 	qualified_identifier (COMMA_SYMBOL qualified_identifier)*
 ;       
 
-qualified_identifier:
-	identifier (DOT_SYMBOL identifier)?
+qualified_identifier
+scope {
+    pANTLR3_UINT8 Prefix;
+    int hasPrefix;
+}
+@init {
+    $qualified_identifier::hasPrefix = 0;
+}
+:
+	identifier {$qualified_identifier::Prefix = $text->chars;} (DOT_SYMBOL identifier {$qualified_identifier::hasPrefix = 1;})?
 ;
 
 qualified_identifier_with_wildcard:

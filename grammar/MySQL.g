@@ -123,7 +123,16 @@ typedef struct {
 	long version;
 	unsigned sql_mode; // A collection of flags indicating which of relevant SQL modes are active.
 	void *payload;     // Since we use the usercp for this struct we need another way to pass around other arbitrary data.
+
+	int is_read;
+	int impl_commit;
+	
+	int index;
+	const char* schemas[64];
+	
+	int sql_type;
 } RecognitionContext;
+
 
 // SQL modes that control parsing behavior.
 #define SQL_MODE_ANSI_QUOTES            1
@@ -240,6 +249,7 @@ extern "C" {
     
     return LA(1) == '(' ? proposed : IDENTIFIER;
   }
+  
 }
 
 @lexer::apifuncs
@@ -287,7 +297,18 @@ query:
 
 statement:
 	// DDL
-	alter_statement
+	(ALTER_SYMBOL^
+  (
+	alter_database
+	| alter_log_file_group
+	| FUNCTION_SYMBOL function_identifier routine_alter_options?
+	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
+	| alter_server
+	| alter_table
+	| alter_tablespace
+	| {SERVER_VERSION >= 50100}? => alter_event
+	| alter_view
+  ))
 	| create_statement
 	| drop_statement
 	| rename_table_statement
@@ -326,20 +347,6 @@ statement:
 
 //----------------- DDL statements -----------------------------------------------------------------
 
-alter_statement:
-  ALTER_SYMBOL^
-  (
-	alter_database
-	| alter_log_file_group
-	| FUNCTION_SYMBOL function_identifier routine_alter_options?
-	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
-	| alter_server
-	| alter_table
-	| alter_tablespace
-	| {SERVER_VERSION >= 50100}? => alter_event
-	| alter_view
-  )
-;
 
 alter_database:
 	DATABASE_SYMBOL

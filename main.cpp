@@ -27,8 +27,12 @@ void testSet() {
     testParseSQL("set names utf8");
 }
 
+void testSelect() {
+    testParseSQL("select * from db.table;");
+}
+
 void testAlert() {
-    testParseSQL("alter schema db_name UPGRADE DATA DIRECTORY NAME;");
+    testParseSQL("alter database dbname UPGRADE DATA DIRECTORY NAME");
 }
 
 struct my_tests_st
@@ -39,6 +43,7 @@ struct my_tests_st
 
 static struct my_tests_st my_tests[]= {
     {"testSet", testSet},
+    {"testSelect", testSelect},
     {"testAlert", testAlert},
     {0, 0}
 };
@@ -48,7 +53,7 @@ std::set<std::string> charset ;
 void testParseSQL(const char* line) {
     MySQLSyntaxChecker* reg = new MySQLSyntaxChecker(50600, std::string("STRICT_TRANS_TABLES"), charset);
 
-    reg->parse(line, strlen(line), false, QtSet);
+    reg->parse(line, strlen(line), false, QtUnknown);
     // std::cout << reg->dump_tree();
 
     delete reg;
