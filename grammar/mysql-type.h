@@ -100,6 +100,7 @@ enum MySQLQueryType
 
   QtPurge,
   QtChangeMaster,
+  QtChangeReplication,
   QtReset,
   QtResetMaster,
   QtResetSlave,
@@ -180,6 +181,7 @@ enum MySQLQueryType
   QtShowTriggers,
   QtShowWarnings,
 
+  QtBinlog,
   QtCacheIndex,
   QtFlush,
   QtKill,   // Connection, Query

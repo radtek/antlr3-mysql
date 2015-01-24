@@ -18,8 +18,7 @@ add_custom_target(generate_parser
                   COMMENT "Checking if we should regenerate mysql.parser files..."
 )
 
-add_definitions(-Wno-sign-compare -Wno-type-limits -Wno-unused
--Wno-missing-field-initializers)
+add_definitions(-Wno-sign-compare -Wno-type-limits -Wno-unused -Wno-missing-field-initializers)
 
 include_directories(.
     ${ANTLR3C_INCLUDE_DIRS}
@@ -52,5 +51,4 @@ endif ()
 target_link_libraries(mysqlparser ${ANTLR3C_LIBRARIES} ${GLIB_LIBRARIES})
 
 install(TARGETS mysqlparser DESTINATION ${INSTALL_LIB_DIR})
-
 install(DIRECTORY ${PROJECT_BINARY_DIR}/antlr-wb/ DESTINATION ${INSTALL_LIB_DIR} )
