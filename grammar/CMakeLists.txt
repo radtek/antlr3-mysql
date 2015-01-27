@@ -37,6 +37,7 @@ add_library(mysqlparser
     string_utilities.cpp
     log.cpp
     file_utilities.cpp
+    mysql-ast.c
 )
 
 add_dependencies(mysqlparser

@@ -188,6 +188,9 @@ typedef struct {
 #endif
 
 #include "MySQLLexer.h" // Not automatically included by the generator.
+#include "mysql-type.h"
+
+#define SQL_TYPE ((RecognitionContext*)RECOGNIZER->state->userp)->sql_type
 }
 
 @lexer::postinclude {
@@ -292,7 +295,7 @@ extern "C" {
 //-------------------------------------------------------------------------------------------------
 
 query
-@after { $query.tree.u = 0x1234; }
+@after {}
 :
 	(statement SEMICOLON_SYMBOL?)? EOF
 ;
@@ -1636,8 +1639,8 @@ repair_option:
 
 //--------------------------------------------------------------------------------------------------
 
-install_uninstall_statment:
-	INSTALL_SYMBOL^ PLUGIN_SYMBOL identifier SONAME_SYMBOL string_literal { SQL_TYPE = QtInstallPlugin;  
+install_uninstall_statement:
+	INSTALL_SYMBOL^ PLUGIN_SYMBOL identifier SONAME_SYMBOL string_literal { SQL_TYPE = QtInstallPlugin; } 
 	| UNINSTALL_SYMBOL^ PLUGIN_SYMBOL identifier { SQL_TYPE = QtUninstallPlugin; }
 ;
 
