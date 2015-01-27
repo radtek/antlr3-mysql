@@ -1283,6 +1283,8 @@ std::string MySQLRecognizer::dump_tree(pANTLR3_BASE_TREE tree, const std::string
   ANTLR3_UINT32 line = tree->getLine(tree);
   pANTLR3_STRING token_text = tree->getText(tree);
 
+  ANTLR3_UINT32 tree_type = tree->getType(tree);
+
   pANTLR3_COMMON_TOKEN token = tree->getToken(tree);
   const char* utf8 = (const char*)token_text->chars;
   if (token != NULL)

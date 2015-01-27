@@ -164,15 +164,15 @@ statement:
 alter_statement:
   ALTER_SYMBOL
   (
-	alter_database { SQL_TYPE = QtAlterDatabase; }
-	| alter_log_file_group { SQL_TYPE = QtAlterLogFileGroup; }
-	| FUNCTION_SYMBOL function_identifier routine_alter_options? { SQL_TYPE = QtAlterFunction; }
-	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options? { SQL_TYPE = QtAlterProcedure; }
-	| alter_server { SQL_TYPE = QtAlterServer; }
-	| alter_table { SQL_TYPE = QtAlterTable; }
-	| alter_tablespace { SQL_TYPE = QtAlterTableSpace; }
-	| {SERVER_VERSION >= 50100}? => alter_event { SQL_TYPE = QtAlterEvent; }
-	| alter_view { SQL_TYPE = QtAlterView; }
+    alter_database { SQL_TYPE = QtAlterDatabase; }
+    | alter_log_file_group { SQL_TYPE = QtAlterLogFileGroup; }
+    | FUNCTION_SYMBOL function_identifier routine_alter_options? { SQL_TYPE = QtAlterFunction; }
+    | PROCEDURE_SYMBOL procedure_identifier routine_alter_options? { SQL_TYPE = QtAlterProcedure; }
+    | alter_server { SQL_TYPE = QtAlterServer; }
+    | alter_table { SQL_TYPE = QtAlterTable; }
+    | alter_tablespace { SQL_TYPE = QtAlterTableSpace; }
+    | {SERVER_VERSION >= 50100}? => alter_event { SQL_TYPE = QtAlterEvent; }
+    | alter_view { SQL_TYPE = QtAlterView; }
   )
 ;
 
@@ -363,7 +363,7 @@ create_statement:
 				| create_view_tail { SQL_TYPE = QtCreateView; }
 				| create_routine_or_udf { SQL_TYPE = QtCreateRoutine; }
 				| create_trigger_tail { SQL_TYPE = QtCreateTrigger; }
-			) 
+			)
 		| view_replace_or_algorithm definer_clause? create_view_tail { SQL_TYPE = QtCreateView; }
 		| create_logfile_group_tail { SQL_TYPE = QtCreateLogFileGroup; }
 		| create_server_tail { SQL_TYPE = QtCreateServer; }
@@ -2175,7 +2175,7 @@ expression_list:
 expression_list_with_direction:
 	expression direction? ( options { greedy = true; }: COMMA_SYMBOL expression direction?)*
 ;
-	
+
 //----------------- Stored program rules -----------------------------------------------------------
 
 // Compound syntax for stored procedures, stored functions, triggers and events.
@@ -2677,7 +2677,7 @@ schema_identifier_pair:
 ;
 
 schema_name:
-	identifier { append_schemas(ctx, $text->chars); dump_schemas(ctx); }
+	identifier { /*append_schemas(ctx, $text->chars); dump_schemas(ctx);*/ }
 ;
 
 qualified_table_identifier: // Always qualified.

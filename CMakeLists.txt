@@ -26,6 +26,7 @@ if (NOT ANTLR3C_FOUND)
   #  Use for Antlr3 the one we have in /ext:
   set(ANTLR3C_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/ext/antlr-runtime ${PROJECT_SOURCE_DIR}/ext/antlr-runtime/include)
   set(ANTLR3C_LIBRARIES "-L${PROJECT_BINARY_DIR}/antlr-wb -lantlr3c_wb")
+  set(ENV{CFLAGS} "$ENV{CFLAGS} -O0 -Wall -g -ggdb")
 
   ExternalProject_Add(antlr-wb
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/antlr-runtime
@@ -43,7 +44,7 @@ if (NOT ANTLR3C_FOUND)
 endif ()
 
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
-SET(INSTALL_LIB_DIR ./lib)
+SET(INSTALL_LIB_DIR ./lib) 
 
 ADD_SUBDIRECTORY(./grammar)
 

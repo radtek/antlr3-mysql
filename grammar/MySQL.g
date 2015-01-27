@@ -291,68 +291,73 @@ extern "C" {
 
 //-------------------------------------------------------------------------------------------------
 
-query:
+query
+@after { $query.tree.u = 0x1234; }
+:
 	(statement SEMICOLON_SYMBOL?)? EOF
 ;
 
 statement:
 	// DDL
-	(ALTER_SYMBOL^
-  (
-	alter_database
-	| alter_log_file_group
-	| FUNCTION_SYMBOL function_identifier routine_alter_options?
-	| PROCEDURE_SYMBOL procedure_identifier routine_alter_options?
-	| alter_server
-	| alter_table
-	| alter_tablespace
-	| {SERVER_VERSION >= 50100}? => alter_event
-	| alter_view
-  ))
-	| create_statement
-	| drop_statement
-	| rename_table_statement
-	| truncate_table_statement
+	alter_statement { /* SQL_TYPE set internal */ } 
+	| create_statement { /* SQL_TYPE set internal */ }
+	| drop_statement { /* SQL_TYPE set internal */ }
+	| rename_table_statement { SQL_TYPE = QtRenameTable; }
+	| truncate_table_statement { SQL_TYPE = QtTruncateTable; }
 	
 	// DML
-	| call_statement
-	| delete_statement
-	| do_statement
-	| handler_statement
-	| insert_statement
-	| load_statement
-	| replace_statement
-	| select_statement
-	| update_statement
+	| call_statement { SQL_TYPE = QtCall; }
+	| delete_statement { SQL_TYPE = QtDelete; }
+	| do_statement { SQL_TYPE = QtDo; }
+	| handler_statement { SQL_TYPE = QtHandler; } 
+	| insert_statement { SQL_TYPE = QtInsert; }
+	| load_statement { /* SQL_TYPE set internal */ }
+	| replace_statement { SQL_TYPE = QtReplace; }
+	| select_statement { SQL_TYPE = QtSelect; }
+	| update_statement { SQL_TYPE = QtUpdate; }
 
 	| partitioning // Cannot be used standalone.
 		
-	| transaction_or_locking_statement
+	| transaction_or_locking_statement { /* SQL_TYPE set internal */ }
 	
-	| replication_statement
+	| replication_statement { /* SQL_TYPE set internal */ }
 	
-	| prepared_statement
+	| prepared_statement { /* SQL_TYPE set internal */ }
 	
 	// Database administration
-	| account_management_statement
-	| table_administration_statement
-	| install_uninstall_statment
-	| {LA(1) == SET_SYMBOL && LA(2) != PASSWORD_SYMBOL}? set_statement // SET PASSWORD is handled in account_management_statement.
+	| account_management_statement { /* SQL_TYPE set internal */ }
+	| table_administration_statement { /* SQL_TYPE set internal */ }
+	| install_uninstall_statement { /* SQL_TYPE set internal */ }
+	| {LA(1) == SET_SYMBOL && LA(2) != PASSWORD_SYMBOL}? set_statement { SQL_TYPE = QtSetPassword; } // SET PASSWORD is handled in account_management_statement. 
 	| show_statement
-	| miscellaneous_statement
+	| miscellaneous_statement { /* SQL_TYPE set internal */ }
 	
 	// MySQL utilitity statements
-	| utility_statement
+	| utility_statement { /* SQL_TYPE set internal */ }
 ;
 
 //----------------- DDL statements -----------------------------------------------------------------
 
+alter_statement:
+  ALTER_SYMBOL^
+  (
+    alter_database { SQL_TYPE = QtAlterDatabase; }
+    | alter_log_file_group { SQL_TYPE = QtAlterLogFileGroup; }
+    | FUNCTION_SYMBOL function_identifier routine_alter_options? { SQL_TYPE = QtAlterFunction; }
+    | PROCEDURE_SYMBOL procedure_identifier routine_alter_options? { SQL_TYPE = QtAlterProcedure; }
+    | alter_server { SQL_TYPE = QtAlterServer; }
+    | alter_table { SQL_TYPE = QtAlterTable; }
+    | alter_tablespace { SQL_TYPE = QtAlterTableSpace; }
+    | {SERVER_VERSION >= 50100}? => alter_event { SQL_TYPE = QtAlterEvent; }
+    | alter_view { SQL_TYPE = QtAlterView; }
+  )
+;
 
 alter_database:
 	DATABASE_SYMBOL
 	(
-		identifier? database_option+
-		| identifier UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL
+		schema_name? database_option+
+		| schema_name UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL
 	)
 ;
 
@@ -526,20 +531,20 @@ alter_view:
 create_statement:
 	CREATE_SYMBOL^
 	(
-		create_table_tail
-		| create_index_tail
-		| create_database_tail
+		create_table_tail { SQL_TYPE = QtCreateTable; }
+		| create_index_tail { SQL_TYPE = QtCreateIndex; }
+		| create_database_tail { SQL_TYPE = QtCreateDatabase; }
 		| definer_clause?
 			(
-				{SERVER_VERSION >= 50100}? => create_event_tail
-				| create_view_tail
-				| create_routine_or_udf
-				| create_trigger_tail
+				{SERVER_VERSION >= 50100}? => create_event_tail { SQL_TYPE = QtCreateEvent; }
+				| create_view_tail { SQL_TYPE = QtCreateView; }
+				| create_routine_or_udf { SQL_TYPE = QtCreateRoutine; }
+				| create_trigger_tail { SQL_TYPE = QtCreateTrigger; }
 			)
-		| view_replace_or_algorithm definer_clause? create_view_tail
-		| create_logfile_group_tail
-		| create_server_tail
-		| create_tablespace_tail
+		| view_replace_or_algorithm definer_clause? create_view_tail { SQL_TYPE = QtCreateView; }
+		| create_logfile_group_tail { SQL_TYPE = QtCreateLogFileGroup; }
+		| create_server_tail { SQL_TYPE = QtCreateServer; }
+		| create_tablespace_tail { SQL_TYPE = QtCreateTableSpace; }
 	)
 ;
 
@@ -567,16 +572,23 @@ create_event_tail:
 		DO_SYMBOL compound_statement
 ;
 
-create_routine: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer create_routine_or_udf SEMICOLON_SYMBOL? EOF
+create_routine
+scope {
+  ANTLR3_UINT8 routine;
+}
+@init {
+  $create_routine::routine = 1;
+}
+: // For external use only. Don't reference this in the normal grammar.
+	create_with_definer create_routine_or_udf SEMICOLON_SYMBOL? EOF { /* SQL_TYPE set interval */ }
 ;
 
 create_procedure: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer procedure_body SEMICOLON_SYMBOL? EOF
+	create_with_definer procedure_body SEMICOLON_SYMBOL? EOF { SQL_TYPE = QtCreateProcedure; }
 ;
 
 create_function: // For external use only. Don't reference this in the normal grammar.
-	create_with_definer function_body SEMICOLON_SYMBOL? EOF
+	create_with_definer function_body SEMICOLON_SYMBOL? EOF { SQL_TYPE = QtCreateFunction; }
 ;
 
 create_routine_or_udf:
@@ -586,15 +598,15 @@ create_routine_or_udf:
 
 procedure_body:
 	PROCEDURE_SYMBOL procedure_identifier OPEN_PAR_SYMBOL (procedure_parameter (COMMA_SYMBOL procedure_parameter)*)? CLOSE_PAR_SYMBOL
-		routine_create_options? compound_statement
+		routine_create_options? compound_statement { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateProcedure; } }
 ;
 
 function_body: // Both built-in functions and UDFs.
 	FUNCTION_SYMBOL
 	(
 		function_identifier OPEN_PAR_SYMBOL (function_parameter (COMMA_SYMBOL function_parameter)*)? CLOSE_PAR_SYMBOL RETURNS_SYMBOL
-			data_type routine_create_options? compound_statement
-		| udf_tail
+			data_type routine_create_options? compound_statement { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateFunction; } }
+		| udf_tail { if ($create_routine != NULL && $create_routine::routine == 1) { SQL_TYPE = QtCreateUdf; } }
 	)
 	| AGGREGATE_SYMBOL FUNCTION_SYMBOL udf_tail // AGGREGATE is optional and in order to avoid ambiquities we have two udf paths.
 ;
@@ -796,16 +808,16 @@ view_algorithm:
 drop_statement:
 	DROP_SYMBOL^
 	(
-		DATABASE_SYMBOL if_exists?  identifier
-		| {SERVER_VERSION >= 50100}? => EVENT_SYMBOL if_exists? qualified_identifier
-		| (FUNCTION_SYMBOL | PROCEDURE_SYMBOL) if_exists? qualified_identifier // UDF, stored procedure and stored function
-		| online_option? INDEX_SYMBOL identifier ON_SYMBOL table_identifier index_lock_algorithm?
-		| LOGFILE_SYMBOL GROUP_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)?
-		| SERVER_SYMBOL if_exists? text_or_identifier
-		| TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
-		| TABLESPACE_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)?
-		| TRIGGER_SYMBOL if_exists? qualified_identifier
-		| VIEW_SYMBOL if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+		DATABASE_SYMBOL if_exists?  identifier { SQL_TYPE = QtDropDatabase; }
+		| {SERVER_VERSION >= 50100}? => EVENT_SYMBOL if_exists? qualified_identifier { SQL_TYPE = QtDropEvent; }
+		| (FUNCTION_SYMBOL { SQL_TYPE = QtDropFunction; } | PROCEDURE_SYMBOL { SQL_TYPE = QtDropProcedure; } ) if_exists? qualified_identifier // UDF, stored procedure and stored function
+		| online_option? INDEX_SYMBOL identifier ON_SYMBOL table_identifier index_lock_algorithm? { SQL_TYPE = QtDropIndex; }
+		| LOGFILE_SYMBOL GROUP_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)? { SQL_TYPE = QtDropLogfileGroup; }
+		| SERVER_SYMBOL if_exists? text_or_identifier { SQL_TYPE = QtDropServer; }
+		| TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)? { SQL_TYPE = QtDropTable; }
+		| TABLESPACE_SYMBOL identifier (drop_logfile_group_option (COMMA_SYMBOL? drop_logfile_group_option)*)? { SQL_TYPE = QtDropTablespace; }
+		| TRIGGER_SYMBOL if_exists? qualified_identifier { SQL_TYPE = QtDropTrigger; }
+		| VIEW_SYMBOL if_exists? table_identifier_list (RESTRICT_SYMBOL | CASCADE_SYMBOL)? { SQL_TYPE = QtDropView; }
 	)
 ;
 
@@ -942,8 +954,8 @@ load_statement:
 ;
 
 data_or_xml:
-	DATA_SYMBOL
-	| {SERVER_VERSION >= 50500}? => XML_SYMBOL
+	DATA_SYMBOL { SQL_TYPE = QtLoadData; }
+	| {SERVER_VERSION >= 50500}? => XML_SYMBOL { SQL_TYPE = QtLoadXML; }
 ;
 
 xml_rows_identified_by:
@@ -1251,14 +1263,14 @@ transaction_or_locking_statement:
 ;
 
 transaction_statement:
-	START_SYMBOL^ TRANSACTION_SYMBOL transaction_characteristic*
-	| BEGIN_SYMBOL^ WORK_SYMBOL?
-	| COMMIT_SYMBOL^ WORK_SYMBOL? (AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?
+	START_SYMBOL^ TRANSACTION_SYMBOL transaction_characteristic* { SQL_TYPE = QtStartTransaction; }
+	| BEGIN_SYMBOL^ WORK_SYMBOL? { SQL_TYPE = QtBeginWork; }
+	| COMMIT_SYMBOL^ WORK_SYMBOL? (AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)? { SQL_TYPE = QtCommit; }
 	| ROLLBACK_SYMBOL^ WORK_SYMBOL?
 		(
 			(AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?
 			| TO_SYMBOL SAVEPOINT_SYMBOL? identifier // Belongs to the savepoint_statement, but this way we don't need a predicate.
-		)
+		) { SQL_TYPE = QtRollbackWork; }
 	// In order to avoid needing a predicate to solve ambiquity between this and general SET statements with global/session variables the following
 	// alternative is moved to the set_statement rule.
 	//| SET_SYMBOL option_type? TRANSACTION_SYMBOL set_transaction_characteristic (COMMA_SYMBOL set_transaction_characteristic)*
@@ -1322,20 +1334,20 @@ xid:
 //--------------------------------------------------------------------------------------------------
 
 replication_statement:
-	PURGE_SYMBOL^ (BINARY_SYMBOL | MASTER_SYMBOL) LOGS_SYMBOL (TO_SYMBOL string_literal | BEFORE_SYMBOL expression)
-	| change_master
-	| {SERVER_VERSION >= 50700}? => change_replication
+	PURGE_SYMBOL^ (BINARY_SYMBOL | MASTER_SYMBOL) LOGS_SYMBOL (TO_SYMBOL string_literal | BEFORE_SYMBOL expression) { SQL_TYPE = QtPurge; }
+	| change_master { SQL_TYPE = QtChangeMaster; }
+	| {SERVER_VERSION >= 50700}? => change_replication {SQL_TYPE = QtChangeReplication; }
 	/* Defined in the miscellaneous statement to avoid ambiguities.
 	| RESET_SYMBOL MASTER_SYMBOL
 	| RESET_SYMBOL SLAVE_SYMBOL ALL_SYMBOL
 	*/
-	| start_slave
-	| stop_slave
-	| {SERVER_VERSION < 50500}? => replication_load
+	| start_slave { SQL_TYPE = QtStartSlave; }
+	| stop_slave { SQL_TYPE = QtStopSlave; }
+	| {SERVER_VERSION < 50500}? => replication_load { /* SQL_TYPE set internal */ } 
 ;
 
 replication_load:
-	LOAD_SYMBOL^ (DATA_SYMBOL | TABLE_SYMBOL table_identifier) FROM_SYMBOL MASTER_SYMBOL
+	LOAD_SYMBOL^ (DATA_SYMBOL { SQL_TYPE = QtLoadDataMaster; } | TABLE_SYMBOL table_identifier { SQL_TYPE = QtLoadTableMaster; }) FROM_SYMBOL MASTER_SYMBOL
 ;
 
 change_master:
@@ -1452,9 +1464,9 @@ gtid_set:
 //--------------------------------------------------------------------------------------------------
 
 prepared_statement:
-	PREPARE_SYMBOL^ identifier FROM_SYMBOL (string_literal | user_variable)
-	| execute_statement
-	| (DEALLOCATE_SYMBOL | DROP_SYMBOL)^ PREPARE_SYMBOL identifier
+	PREPARE_SYMBOL^ identifier FROM_SYMBOL (string_literal | user_variable) { SQL_TYPE = QtPrepare; }
+	| execute_statement { SQL_TYPE = QtExecute; }
+	| (DEALLOCATE_SYMBOL | DROP_SYMBOL)^ PREPARE_SYMBOL identifier { SQL_TYPE = QtDeallocate; }
 ;
 
 execute_statement:
@@ -1468,14 +1480,14 @@ execute_var_list:
 //--------------------------------------------------------------------------------------------------
 
 account_management_statement:
-	{SERVER_VERSION >= 50606}? => alter_user_list
-	| create_user
-	| drop_user
-	| {SERVER_VERSION >= 50500}? => grant_proxy
-	| grant
-	| rename_user
-	| revoke_statement
-	| set_password
+	{SERVER_VERSION >= 50606}? => alter_user_list { SQL_TYPE = QtAlterUser; }
+	| create_user { SQL_TYPE = QtCreateUser; }
+	| drop_user { SQL_TYPE = QtDropUser; }
+	| {SERVER_VERSION >= 50500}? => grant_proxy { SQL_TYPE = QtGrantProxy; }
+	| grant { SQL_TYPE = QtGrant; }
+	| rename_user { SQL_TYPE = QtRenameUser; }
+	| revoke_statement { /* SQL_TYPE set internal */}
+	| set_password { SQL_TYPE = QtSetPassword; }
 ;
 
 alter_user_list:
@@ -1528,9 +1540,9 @@ rename_user:
 revoke_statement:
 	REVOKE_SYMBOL^
 	(
-		{LA(1) == ALL_SYMBOL}? => ALL_SYMBOL PRIVILEGES_SYMBOL? COMMA_SYMBOL GRANT_SYMBOL OPTION_SYMBOL FROM_SYMBOL user_list
-		| grant_privileges privilege_target FROM_SYMBOL user_list
-		| {SERVER_VERSION >= 50500}? => PROXY_SYMBOL ON_SYMBOL user FROM_SYMBOL user_list
+		{LA(1) == ALL_SYMBOL}? => ALL_SYMBOL PRIVILEGES_SYMBOL? COMMA_SYMBOL GRANT_SYMBOL OPTION_SYMBOL FROM_SYMBOL user_list { SQL_TYPE = QtRevoke; }
+		| grant_privileges privilege_target FROM_SYMBOL user_list { SQL_TYPE = QtRevoke; }
+		| {SERVER_VERSION >= 50500}? => PROXY_SYMBOL ON_SYMBOL user FROM_SYMBOL user_list { SQL_TYPE = QtRevokeProxy; }
 	)
 ;
 
@@ -1605,13 +1617,13 @@ grant_option:
 //--------------------------------------------------------------------------------------------------
 
 table_administration_statement:
-	ANALYZE_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list
-	| CHECK_SYMBOL^ TABLE_SYMBOL qualified_identifier_list check_option*
-	| CHECKSUM_SYMBOL^ TABLE_SYMBOL qualified_identifier_list (QUICK_SYMBOL | EXTENDED_SYMBOL)?
-	| OPTIMIZE_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list
-	| REPAIR_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list repair_option*
-	| {SERVER_VERSION < 50500}? => BACKUP_SYMBOL^ TABLE_SYMBOL table_identifier_list TO_SYMBOL string_literal
-	| {SERVER_VERSION < 50500}? => RESTORE_SYMBOL^ TABLE_SYMBOL table_identifier_list FROM_SYMBOL string_literal
+	ANALYZE_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list { SQL_TYPE = QtAnalyzeTable; }
+	| CHECK_SYMBOL^ TABLE_SYMBOL qualified_identifier_list check_option* { SQL_TYPE = QtCheckTable; }
+	| CHECKSUM_SYMBOL^ TABLE_SYMBOL qualified_identifier_list (QUICK_SYMBOL | EXTENDED_SYMBOL)? { SQL_TYPE = QtChecksumTable; }
+	| OPTIMIZE_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list { SQL_TYPE = QtOptimizeTable; }
+	| REPAIR_SYMBOL^ no_write_to_bin_log? TABLE_SYMBOL qualified_identifier_list repair_option* { SQL_TYPE = QtRepairTable; }
+	| {SERVER_VERSION < 50500}? => BACKUP_SYMBOL^ TABLE_SYMBOL table_identifier_list TO_SYMBOL string_literal { SQL_TYPE = QtBackUpTable; }
+	| {SERVER_VERSION < 50500}? => RESTORE_SYMBOL^ TABLE_SYMBOL table_identifier_list FROM_SYMBOL string_literal { SQL_TYPE = QtRestoreTable; }
 ;
 
 check_option:
@@ -1625,8 +1637,8 @@ repair_option:
 //--------------------------------------------------------------------------------------------------
 
 install_uninstall_statment:
-	INSTALL_SYMBOL^ PLUGIN_SYMBOL identifier SONAME_SYMBOL string_literal
-	| UNINSTALL_SYMBOL^ PLUGIN_SYMBOL identifier
+	INSTALL_SYMBOL^ PLUGIN_SYMBOL identifier SONAME_SYMBOL string_literal { SQL_TYPE = QtInstallPlugin;  
+	| UNINSTALL_SYMBOL^ PLUGIN_SYMBOL identifier { SQL_TYPE = QtUninstallPlugin; }
 ;
 
 //--------------------------------------------------------------------------------------------------
@@ -1750,12 +1762,12 @@ profile_type:
 //--------------------------------------------------------------------------------------------------
 
 miscellaneous_statement:
-	BINLOG_SYMBOL^ string_literal
-	| CACHE_SYMBOL^ INDEX_SYMBOL key_cache_list_or_parts IN_SYMBOL (identifier | DEFAULT_SYMBOL)
-	| FLUSH_SYMBOL^ no_write_to_bin_log? flush_option (COMMA_SYMBOL flush_option)*
-	| KILL_SYMBOL^ (CONNECTION_SYMBOL | QUERY_SYMBOL)? INTEGER
-	| LOAD_SYMBOL^ INDEX_SYMBOL INTO_SYMBOL CACHE_SYMBOL load_table_index_list
-	| RESET_SYMBOL^ reset_option (COMMA_SYMBOL reset_option)*
+	BINLOG_SYMBOL^ string_literal { SQL_TYPE = QtBinlog; }
+	| CACHE_SYMBOL^ INDEX_SYMBOL key_cache_list_or_parts IN_SYMBOL (identifier | DEFAULT_SYMBOL) { SQL_TYPE = QtCacheIndex; }
+	| FLUSH_SYMBOL^ no_write_to_bin_log? flush_option (COMMA_SYMBOL flush_option)* { SQL_TYPE = QtFlush; }
+	| KILL_SYMBOL^ (CONNECTION_SYMBOL | QUERY_SYMBOL)? INTEGER { SQL_TYPE = QtKill; }
+	| LOAD_SYMBOL^ INDEX_SYMBOL INTO_SYMBOL CACHE_SYMBOL load_table_index_list { SQL_TYPE = QtLoadIndex; }
+	| RESET_SYMBOL^ reset_option (COMMA_SYMBOL reset_option)* { SQL_TYPE = QtReset; }
 ;
 
 key_cache_list_or_parts options { k = 4; }:
@@ -1844,9 +1856,9 @@ utility_statement:
 					| {SERVER_VERSION >= 50105}? => PARTITIONS_SYMBOL // deprecated since 5.7
 					| {SERVER_VERSION >= 50605}? => FORMAT_SYMBOL EQUAL_OPERATOR text_or_identifier
 				)? explainable_statement
-		)
-	| HELP_SYMBOL^ text_or_identifier
-	| USE_SYMBOL^ identifier
+		) { SQL_TYPE = QtExplainStatement; }
+	| HELP_SYMBOL^ text_or_identifier { SQL_TYPE = QtHelp; }
+	| USE_SYMBOL^ identifier { SQL_TYPE = QtUse; }
 ;
 
 describe_command:

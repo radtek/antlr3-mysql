@@ -45,3 +45,5 @@ antlr-wb-prefix
 .libs
 
 autom4te.cache
+
+tags

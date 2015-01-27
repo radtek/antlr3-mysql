@@ -174,3 +174,7 @@ const char* MySQLSyntaxChecker::text()
 }
 
 //--------------------------------------------------------------------------------------------------
+
+MySQLQueryType MySQLSyntaxChecker::getSQLType() {
+    return (MySQLQueryType) this->d->_context.sql_type;
+}

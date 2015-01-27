@@ -39,6 +39,8 @@ public:
   virtual const char* text();
   long server_version();
 
+  MySQLQueryType getSQLType();
+
 protected:
 
 private:
